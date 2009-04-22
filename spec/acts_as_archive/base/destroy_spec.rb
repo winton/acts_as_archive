@@ -1,19 +1,29 @@
-require File.expand_path(File.dirname(__FILE__) + "/../spec_helper")
+require File.expand_path(File.dirname(__FILE__) + "/../../spec_helper")
 
 describe ActsAsArchive::Base::Destroy do
-  
-  def article_match?(original, copy)
-    copy.id.should == original.id
-    copy.title.should == original.title
-    copy.body.should == original.body
-    copy.created_at.to_s.should == original.created_at.to_s
-    copy.updated_at.to_s.should == original.updated_at.to_s
-    copy.deleted_at.strftime('%j%H%M').should == Time.now.strftime('%j%H%M')
-  end
   
   before(:all) do
     establish_test_db
     Article.create_archive_table
+    @connection = ActiveRecord::Base.connection
+  end
+  
+  describe 'delete_all!' do
+    
+    before(:each) do
+      @articles = []
+      @connection.execute("TRUNCATE TABLE #{Article.table_name}")
+      5.times do |x|
+        @articles << Article.create(:title => "Title #{x}", :body => "Body #{x}")
+      end
+    end
+    
+    it "should really delete all records" do
+      Article.delete_all!
+      Article.count.should == 0
+      Article::Archive.count.should == 0
+    end
+    
   end
   
   describe 'delete_all' do

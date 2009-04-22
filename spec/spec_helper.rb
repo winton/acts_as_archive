@@ -12,6 +12,17 @@ require File.expand_path("#{SPEC}/../rails/init")
 Spec::Runner.configure do |config|
 end
 
+def article_match?(original, copy)
+  copy.id.should == original.id
+  copy.title.should == original.title
+  copy.body.should == original.body
+  copy.created_at.to_s.should == original.created_at.to_s
+  copy.updated_at.to_s.should == original.updated_at.to_s
+  if copy.respond_to?(:deleted_at)
+    copy.deleted_at.strftime('%j%H%M').should == Time.now.strftime('%j%H%M')
+  end
+end
+
 def debug(object)
   puts "<pre>"
   pp object
@@ -21,17 +32,19 @@ end
 def establish_test_db
   # Establish connection
   unless ActiveRecord::Base.connected?
-    config = YAML::load(File.open("#{SPEC}/config/database.yml"))['test']
-    ActiveRecord::Base.establish_connection(config)
+    config = YAML::load(File.open("#{SPEC}/db/config/database.yml"))
+    ActiveRecord::Base.configurations = config
+    ActiveRecord::Base.establish_connection(config['test'])
   end
   # Establish logger
-  logger_file = File.open("#{SPEC}/log/test.log", 'a')
+  logger_file = File.open("#{SPEC}/db/log/test.log", 'a')
   logger_file.sync = true
   @logger = Logger.new logger_file
   ActiveRecord::Base.logger = @logger
   # Drop articles and archived_articles
   ActiveRecord::Base.connection.execute("DROP TABLE IF EXISTS articles")
   ActiveRecord::Base.connection.execute("DROP TABLE IF EXISTS archived_articles")
+  ActiveRecord::Base.connection.execute("DROP TABLE IF EXISTS schema_migrations")
   # Create articles table
   ActiveRecord::Base.connection.create_table(:articles) do |t|
     t.string :title
@@ -39,5 +52,5 @@ def establish_test_db
     t.timestamps
   end
   # Load model
-  require "#{SPEC}/models/article"
+  require "#{SPEC}/db/models/article"
 end

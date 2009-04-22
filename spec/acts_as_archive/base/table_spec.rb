@@ -1,6 +1,6 @@
-require File.expand_path(File.dirname(__FILE__) + "/../spec_helper")
+require File.expand_path(File.dirname(__FILE__) + "/../../spec_helper")
 
-describe ActsAsArchive::Base::Structure do
+describe ActsAsArchive::Base::Table do
   
   before(:all) do
     establish_test_db

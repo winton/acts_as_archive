@@ -2,5 +2,5 @@
 *.gem
 tmp
 
-spec/config/database.yml
-spec/log/*.log
+spec/db/config/database.yml
+spec/db/log/*.log
