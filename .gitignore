@@ -2,5 +2,5 @@
 *.gem
 tmp
 
-spec/fixtures/database.yml
-spec/fixtures/*.log
+spec/config/database.yml
+spec/log
