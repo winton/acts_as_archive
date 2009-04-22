@@ -1,0 +1,6 @@
+test:
+  adapter: mysql
+  database: acts_as_archive
+  username: root
+  password: 
+  host: localhost

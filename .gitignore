@@ -1,0 +1,6 @@
+.DS_Store
+*.gem
+tmp
+
+spec/fixtures/database.yml
+spec/fixtures/*.log
