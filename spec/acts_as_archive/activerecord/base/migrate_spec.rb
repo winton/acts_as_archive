@@ -1,10 +1,10 @@
 require File.expand_path(File.dirname(__FILE__) + "/../../../spec_helper")
 
-describe ActsAsArchive::ActiveRecord::Base::Migrate do
+describe ActsAsArchive::Migrate do
   
   before(:all) do
     establish_test_db
-    @connection = Article.connection
+    @connection = ActiveRecord::Base.connection
   end
   
   describe 'create_archive_table' do

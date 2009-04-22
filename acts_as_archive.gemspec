@@ -10,8 +10,6 @@ Gem::Specification.new do |s|
   s.email    = 'mail@wintoni.us'
   s.homepage = 'http://github.com/winton/'
   
-  s.has_rdoc = false
-  
   # = MANIFEST =
   # = MANIFEST =
 end

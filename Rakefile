@@ -1,4 +1,6 @@
 require 'rake'
+require 'rubygems'
+require 'spec/rake/spectask'
 
 GEM_NAME = 'acts_as_archive'
 task :default => "#{GEM_NAME}.gemspec"
