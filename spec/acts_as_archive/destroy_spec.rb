@@ -1,6 +1,6 @@
 require File.expand_path(File.dirname(__FILE__) + "/../spec_helper")
 
-describe ActsAsArchive::Destroy do
+describe ActsAsArchive::Base::Destroy do
   
   def article_match?(original, copy)
     copy.id.should == original.id

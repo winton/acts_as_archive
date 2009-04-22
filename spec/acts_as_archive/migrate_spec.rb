@@ -1,6 +1,6 @@
 require File.expand_path(File.dirname(__FILE__) + "/../spec_helper")
 
-describe ActsAsArchive::Migrate do
+describe ActsAsArchive::Base::Structure do
   
   before(:all) do
     establish_test_db
