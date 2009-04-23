@@ -16,11 +16,15 @@ module ActsAsArchive
       end
 
       module ClassMethods
-        def copy_to_archive(conditions)
+        def copy_to_archive(conditions, import=false)
           add_conditions!(where = '', conditions)
           insert_cols = column_names.clone
           select_cols = column_names.clone
-          unless insert_cols.include?('deleted_at')
+          if insert_cols.include?('deleted_at')
+            unless import
+              select_cols[select_cols.index('deleted_at')] = "'#{Time.now.to_s(:db)}'"
+            end
+          else
             insert_cols << 'deleted_at'
             select_cols << "'#{Time.now.to_s(:db)}'"
           end
