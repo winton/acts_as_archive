@@ -33,7 +33,7 @@ module ActsAsArchive
         
         def migrate_from_acts_as_paranoid
           if column_names.include?('deleted_at')
-            # Base::Destroy::copy_to_archive
+            # Base::Destroy.copy_to_archive
             copy_to_archive('deleted_at IS NOT NULL')
           end
         end
