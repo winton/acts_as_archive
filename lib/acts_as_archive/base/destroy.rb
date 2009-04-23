@@ -18,28 +18,23 @@ module ActsAsArchive
       module ClassMethods
         def copy_to_archive(conditions)
           add_conditions!(where = '', conditions)
-          col_names = column_names - [ 'deleted_at' ]
+          insert_cols = column_names.clone
+          select_cols = column_names.clone
+          unless insert_cols.include?('deleted_at')
+            insert_cols << 'deleted_at'
+            select_cols << "'#{Time.now.to_s(:db)}'"
+          end
           connection.execute(%{
-            INSERT INTO archived_#{table_name} (#{col_names.join(', ')}, deleted_at)
-              SELECT #{col_names.join(', ')}, '#{Time.now.to_s(:db)}'
+            INSERT INTO archived_#{table_name} (#{insert_cols.join(', ')})
+              SELECT #{select_cols.join(', ')}
               FROM #{table_name}
               #{where}
           })
-          if where.empty?
-            connection.execute("TRUNCATE TABLE #{table_name}")
-          else
-            connection.execute("DELETE FROM #{table_name} #{where}")
-          end
+          connection.execute("DELETE FROM #{table_name} #{where}")
         end
       
         def delete_all(conditions=nil)
           copy_to_archive(conditions)
-        end
-        
-        def migrate_from_acts_as_paranoid
-          if column_names.include?('deleted_at')
-            copy_to_archive('deleted_at IS NOT NULL')
-          end
         end
       end
 

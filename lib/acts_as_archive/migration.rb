@@ -24,6 +24,10 @@ module ActsAsArchive
           :drop_table, :remove_column, :remove_columns,
           :remove_timestamps, :rename_column, :rename_table
         ]
+        if args.include?(:deleted_at) || args.include?('deleted_at')
+          # Don't change the archive's deleted_at column
+          return
+        end
         if !args.empty? && supported.include?(method)
           connection = ActiveRecord::Base.connection
           args[0] = "archived_" + ActiveRecord::Migrator.proper_table_name(args[0])

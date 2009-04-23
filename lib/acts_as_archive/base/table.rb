@@ -21,10 +21,20 @@ module ActsAsArchive
                 AS SELECT * from #{table_name}
                 WHERE false;
             })
+            columns = connection.columns("archived_#{table_name}").collect(&:name)
+            unless columns.include?('deleted_at')
+              connection.add_column("archived_#{table_name}", :deleted_at, :datetime)
+            end
+            connection.add_index("archived_#{table_name}", :id)
+            connection.add_index("archived_#{table_name}", :deleted_at)
+            migrate_from_acts_as_paranoid
           end
-          columns = connection.columns("archived_#{table_name}").collect(&:name)
-          unless columns.include?('deleted_at')
-            connection.add_column("archived_#{table_name}", 'deleted_at', :datetime)
+        end
+        
+        def migrate_from_acts_as_paranoid
+          if column_names.include?('deleted_at')
+            # Base::Destroy::copy_to_archive
+            copy_to_archive('deleted_at IS NOT NULL')
           end
         end
       end
