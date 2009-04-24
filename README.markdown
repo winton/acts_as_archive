@@ -20,7 +20,7 @@ rubygems:
 sudo gem install winton-acts_as_archive
 
 # environment.rb
-config.gem "winton-acts_as_archive"
+config.gem "winton-acts_as_archive", :lib => "acts_as_archive", :source => "http://gems.github.com"
 </pre>
 
 Models
@@ -43,26 +43,31 @@ Next time your Rails instance boots up, the plugin replicates your table's struc
 Use <code>destroy</code>, <code>delete</code>, and <code>delete_all</code> like you normally would.
 Records are copied into the archive table before being destroyed.
 
-Archive Model
--------------
+What if my schema changes?
+--------------------------
 
-Run finds on the archive by adding <code>::Archive</code> to your model:
+Any new migrations on your <code>acts\_as\_archive</code> table are automatically applied to the archive table.
+
+Query the archive
+-----------------
+
+Add <code>::Archive</code> to your ActiveRecord class:
 
 <pre>
 Article::Archive.find(:first)
 </pre>
 
-Restore
--------
+Restore from the archive
+------------------------
 
-Use <code>restore\_all</code> to copy archive records back to your table:
+Use <code>restore\_all</code> to copy archived records back to your table:
 
-<code>
+<pre>
 Article.restore_all([ 'id = ?', 1 ])
-</code>
+</pre>
 
 Auto-migrate from acts\_as\_paranoid
 ------------------------------------
 
 If a <code>deleted\_at</code> column is present in your table, the plugin will attempt to move deleted
-records to the archive table.
+records to the archive table, preserving the <code>deleted\_at</code> value.
