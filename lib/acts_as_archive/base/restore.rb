@@ -19,11 +19,7 @@ module ActsAsArchive
               FROM archived_#{table_name}
               #{where}
           })
-          if where.empty?
-            connection.execute("TRUNCATE TABLE archived_#{table_name}")
-          else
-            connection.execute("DELETE FROM archived_#{table_name} #{where}")
-          end
+          connection.execute("DELETE FROM archived_#{table_name} #{where}")
         end
         
         def restore_all(conditions=nil)
