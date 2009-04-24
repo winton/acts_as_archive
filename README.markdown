@@ -76,4 +76,4 @@ records to the archive table. The <code>deleted\_at</code> value is preserved.
 Production
 ----------
 
-Any time you add a new acts\_as\_archive method call, please run <code>script/console</code> on your production copy before it goes live.
+Any time you add a new <code>acts\_as\_archive</code> method call, please run <code>script/console</code> on your production copy before it goes live.
