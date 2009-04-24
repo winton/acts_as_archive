@@ -15,8 +15,8 @@ module ActsAsArchive
           add_conditions!(where = '', conditions)
           col_names = column_names - [ 'deleted_at' ]
           connection.execute(%{
-            INSERT INTO #{table_name} (#{col_name.join(', ')})
-              SELECT #{col_name.join(', ')}
+            INSERT INTO #{table_name} (#{col_names.join(', ')})
+              SELECT #{col_names.join(', ')}
               FROM archived_#{table_name}
               #{where}
           })
