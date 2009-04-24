@@ -13,9 +13,10 @@ module ActsAsArchive
         
         def copy_from_archive(conditions)
           add_conditions!(where = '', conditions)
+          col_names = column_names - [ 'deleted_at' ]
           connection.execute(%{
-            INSERT INTO #{table_name} (#{column_names.join(', ')})
-              SELECT #{column_names.join(', ')}
+            INSERT INTO #{table_name} (#{col_name.join(', ')})
+              SELECT #{col_name.join(', ')}
               FROM archived_#{table_name}
               #{where}
           })
