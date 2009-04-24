@@ -2,6 +2,7 @@ ActsAsArchive
 =============
 
 Don't delete your records, move them to a different table.
+
 Like <code>acts\_as\_paranoid</code>, but doesn't change all your SQL queries.
 
 Install
@@ -70,4 +71,9 @@ Auto-migrate from acts\_as\_paranoid
 ------------------------------------
 
 If a <code>deleted\_at</code> column is present in your table, the plugin will attempt to move deleted
-records to the archive table, preserving the <code>deleted\_at</code> value.
+records to the archive table. The <code>deleted\_at</code> value is preserved.
+
+Production
+----------
+
+Any time you add a new acts\_as\_archive method call, please run <code>script/console</script> on your production copy before it goes live.
