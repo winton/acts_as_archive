@@ -45,9 +45,9 @@ cd your_rails_app
 acts_as_archive
 </pre>
 
-This command creates your archive tables.
+This command creates your archive tables (<code>archived_articles</code>, for example).
 
-Archive tables resemble your table's structure, with an additional <code>deleted_at</code> column.
+Archive tables mirror your table's structure, with an additional <code>deleted_at</code> column.
 
 Run this command every time you add <code>acts\_as\_archive</code> to a new model.
 
@@ -91,7 +91,7 @@ Add indexes to your archive
 
 By default, there are no indexes on your archive table to keep insertions fast.
 
-Add indexes using the <code>:indexes</code> option:
+If you will be querying your archive a lot, you will want to add indexes:
 
 <pre>
 class Article < ActiveRecord::Base
