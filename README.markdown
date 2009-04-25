@@ -45,8 +45,9 @@ cd your_rails_app
 acts_as_archive
 </pre>
 
-This command replicates your table's structure into the <code>archived\_articles</code> table
-(in this example). The archive table has an additional <code>deleted\_at</code> column.
+This command creates your archive tables.
+
+Archive tables resemble your table's structure, with an additional <code>deleted_at</code> column.
 
 Run this command every time you add <code>acts\_as\_archive</code> to a new model.
 
@@ -82,13 +83,15 @@ Article.restore_all([ 'id = ?', 1 ])
 Auto-migrate from acts\_as\_paranoid
 ------------------------------------
 
-If a <code>deleted\_at</code> column is present in your table, the plugin will attempt to move deleted
-records to the archive table. The <code>deleted\_at</code> value is preserved.
+If you previously used the <code>acts\_as\_paranoid</code> plugin, running the <code>acts\_as\_archive</code>
+command will automatically move your deleted records to the archive table (see _Run acts\_as\_archive_).
 
 Add indexes to your archive
 ---------------------------
 
-By default, there are no indexes on your archive table. Add indexes using the <code>:indexes</code> option:
+By default, there are no indexes on your archive table to keep insertions fast.
+
+Add indexes using the <code>:indexes</code> option:
 
 <pre>
 class Article < ActiveRecord::Base
