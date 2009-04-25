@@ -31,15 +31,31 @@ Add <code>acts\_as\_archive</code> to your models:
 
 <pre>
 class Article < ActiveRecord::Base
+
   acts_as_archive
+  
+  # Or you can add custom archive table indexes
+  acts_as_archive :indexes => [ :id, :deleted_at ]
 end
 </pre>
 
+Run acts\_as\_archive
+---------------------
+
+Terminal:
+
+<pre>
+cd your_rails_app
+acts_as_archive
+</pre>
+
+This command replicates your table's structure into <code>archived\_articles</code>
+(as per the example), with an additional <code>deleted\_at</code> column.
+
+Run again if you add more <code>:indexes</code>.
+
 That's it!
 ----------
-
-Next time your Rails instance boots up, the plugin replicates your table's structure into
-<code>archived\_articles</code> (as per the example), with an additional <code>deleted\_at</code> column.
 
 Use <code>destroy</code>, <code>delete</code>, and <code>delete_all</code> like you normally would.
 Records are copied into the archive table before being destroyed.
@@ -72,8 +88,3 @@ Auto-migrate from acts\_as\_paranoid
 
 If a <code>deleted\_at</code> column is present in your table, the plugin will attempt to move deleted
 records to the archive table. The <code>deleted\_at</code> value is preserved.
-
-Production
-----------
-
-Any time you add a new <code>acts\_as\_archive</code> method call, please run <code>script/console</code> on your production copy before it goes live.

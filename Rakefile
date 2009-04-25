@@ -1,39 +1,45 @@
-require 'rake'
 require 'rubygems'
+require 'rake'
+require 'rake/gempackagetask'
 require 'spec/rake/spectask'
 
 GEM_NAME = 'acts_as_archive'
-task :default => "#{GEM_NAME}.gemspec"
+PKG_FILES = FileList['**/*']
 
-file "#{GEM_NAME}.gemspec" => FileList[ '{lib,spec}/**', 'Rakefile' ] do |f|
-  # Read spec file and split out manifest section
-  spec = File.read(f.name)
-  parts = spec.split("  # = MANIFEST =\n")
-  fail 'bad spec' if parts.length != 3
-  # Determine file list from git ls-files
-  files = `git ls-files`.
-    split("\n").
-    sort.
-    reject{ |file| file =~ /^\./ }.
-    reject { |file| file =~ /^doc/ }.
-    map{ |file| "    #{file}" }.
-    join("\n")
-  # Piece file back together and write
-  parts[1] = "  s.files = %w[\n#{files}\n  ]\n"
-  spec = parts.join("  # = MANIFEST =\n")
-  File.open(f.name, 'w') { |io| io.write(spec) }
-  puts "Updated #{f.name}"
+spec = Gem::Specification.new do |s|
+  s.author = "Winton Welsh"
+  s.email = "mail@wintoni.us"
+  s.executables << GEM_NAME
+  s.extra_rdoc_files = [ "README.markdown" ]
+  s.files = PKG_FILES.to_a
+  s.homepage = "http://github.com/winton/#{GEM_NAME}"
+  s.name = GEM_NAME
+  s.platform = Gem::Platform::RUBY
+  s.require_path = "lib"
+  s.summary = "Don't delete your records, move them to a different table"
+  s.version = "0.1.2"
 end
 
-# Install the gem
+desc "Package gem"
+Rake::GemPackageTask.new(spec) do |pkg|
+  pkg.gem_spec = spec
+end
+
+desc "Install gem"
 task :install do
+  Rake::Task['gem'].invoke
   `sudo gem uninstall #{GEM_NAME} -x`
-  `gem build #{GEM_NAME}.gemspec`
-  `sudo gem install #{GEM_NAME}*.gem`
-  `rm #{GEM_NAME}*.gem`
+  `sudo gem install pkg/#{GEM_NAME}*.gem`
+  `rm -Rf pkg`
 end
 
-# rake spec
+desc "Generate gemspec"
+task :gemspec do
+  File.open("#{File.dirname(__FILE__)}/#{GEM_NAME}.gemspec", 'w') do |f|
+    f.write(spec.to_ruby)
+  end
+end
+
 desc "Run specs"
 Spec::Rake::SpecTask.new do |t|
   t.spec_opts = ["--format", "specdoc", "--colour"]
