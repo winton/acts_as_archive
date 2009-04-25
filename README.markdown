@@ -24,18 +24,14 @@ sudo gem install winton-acts_as_archive
 config.gem "winton-acts_as_archive", :lib => "acts_as_archive", :source => "http://gems.github.com"
 </pre>
 
-Models
-------
+Update models
+-------------
 
 Add <code>acts\_as\_archive</code> to your models:
 
 <pre>
 class Article < ActiveRecord::Base
-
   acts_as_archive
-  
-  # Or you can add custom archive table indexes
-  acts_as_archive :indexes => [ :id, :deleted_at ]
 end
 </pre>
 
@@ -49,21 +45,21 @@ cd your_rails_app
 acts_as_archive
 </pre>
 
-This command replicates your table's structure into <code>archived\_articles</code>
-(as per the example), with an additional <code>deleted\_at</code> column.
+This command replicates your table's structure into the <code>archived\_articles</code> table
+(in this example). The archive table has an additional <code>deleted\_at</code> column.
 
-Run again if you add more <code>:indexes</code>.
+Run this command every time you add <code>acts\_as\_archive</code> to a new model.
 
 That's it!
 ----------
 
 Use <code>destroy</code>, <code>delete</code>, and <code>delete_all</code> like you normally would.
-Records are copied into the archive table before being destroyed.
+Records move into the archive table instead of being destroyed.
 
 What if my schema changes?
 --------------------------
 
-Any new migrations on your <code>acts\_as\_archive</code> table are automatically applied to the archive table.
+Any new migrations on your table are automatically applied to the archive table.
 
 Query the archive
 -----------------
@@ -88,3 +84,16 @@ Auto-migrate from acts\_as\_paranoid
 
 If a <code>deleted\_at</code> column is present in your table, the plugin will attempt to move deleted
 records to the archive table. The <code>deleted\_at</code> value is preserved.
+
+Add indexes to your archive
+---------------------------
+
+By default, there are no indexes on your archive table. Add indexes using the <code>:indexes</code> option:
+
+<pre>
+class Article < ActiveRecord::Base
+  acts_as_archive :indexes => [ :id, :created_at, :deleted_at ]
+end
+</pre>
+
+Run the <code>acts\_as\_archive</code> command after adding new indexes.
