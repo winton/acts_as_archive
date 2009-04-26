@@ -39,6 +39,9 @@ module ActsAsArchive
             (archive_indexes - indexes).each do |index|
               connection.add_index("archived_#{table_name}", index)
             end
+            (indexes - archive_indexes).each do |index|
+              connection.remove_index("archived_#{table_name}", index)
+            end
           end
         end
         

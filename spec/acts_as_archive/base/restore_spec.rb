@@ -5,25 +5,17 @@ describe ActsAsArchive::Base::Restore do
   before(:all) do
     establish_test_db
     Article.create_archive_table
-    @connection = ActiveRecord::Base.connection
   end
   
   describe 'restore_all' do
     
-    before(:each) do
-      @articles = []
-      @connection.execute("TRUNCATE TABLE #{Article.table_name}")
-      5.times do |x|
-        @connection.execute(%{
-          INSERT INTO archived_#{Article.table_name} (`id`, `title`, `body`) VALUES (#{x+1}, 'Title #{x}', 'Body #{x}')
-        })
-        @articles << Article::Archive.find(x+1)
-      end
+    before(:all) do
+      @articles = create_records(Article::Archive)
     end
     
     describe 'with conditions' do
       
-      before(:each) do
+      before(:all) do
         # Mini restore parameter test
         Article.restore_all [ 'id = ?', @articles[0].id ]
         Article.restore_all "id = #{@articles[1].id}"
@@ -45,7 +37,7 @@ describe ActsAsArchive::Base::Restore do
     
     describe 'without conditions' do
       
-      before(:each) do
+      before(:all) do
         Article.restore_all
       end
       

@@ -5,17 +5,12 @@ describe ActsAsArchive::Base::Destroy do
   before(:all) do
     establish_test_db
     Article.create_archive_table
-    @connection = ActiveRecord::Base.connection
   end
   
   describe 'delete_all!' do
     
     before(:each) do
-      @articles = []
-      @connection.execute("TRUNCATE TABLE #{Article.table_name}")
-      5.times do |x|
-        @articles << Article.create(:title => "Title #{x}", :body => "Body #{x}")
-      end
+      create_records
     end
     
     it "should really delete all records" do
@@ -29,10 +24,7 @@ describe ActsAsArchive::Base::Destroy do
   describe 'delete_all' do
     
     before(:each) do
-      @articles = []
-      5.times do |x|
-        @articles << Article.create(:title => "Title #{x}", :body => "Body #{x}")
-      end
+      @articles = create_records
     end
     
     describe 'with conditions' do
@@ -83,10 +75,7 @@ describe ActsAsArchive::Base::Destroy do
     describe d do
     
       before(:each) do
-        @articles = []
-        5.times do |x|
-          @articles << Article.create(:title => "Title #{x}", :body => "Body #{x}")
-        end
+        @articles = create_records
         Article.find(@articles[0..1].collect(&:id)).each do |a|
           a.send(d)
         end

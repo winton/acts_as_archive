@@ -5,17 +5,16 @@ describe ActsAsArchive::Migration do
   before(:each) do
     establish_test_db
     Article.create_archive_table
-    @connection = ActiveRecord::Base.connection
   end
   
   describe 'method_missing_with_archive' do
     
     before(:each) do
-      @old_article_columns = @connection.columns("articles").collect(&:name)
-      @old_archive_columns = @connection.columns("archived_articles").collect(&:name)
+      @old_article_columns = columns("articles")
+      @old_archive_columns = columns("archived_articles")
       ActiveRecord::Migrator.migrate("#{SPEC}/db/migrate")
-      @new_article_columns = @connection.columns("articles").collect(&:name)
-      @new_archive_columns = @connection.columns("archived_articles").collect(&:name)
+      @new_article_columns = columns("articles")
+      @new_archive_columns = columns("archived_articles")
     end
     
     it 'should migrate both tables up' do
@@ -27,8 +26,8 @@ describe ActsAsArchive::Migration do
       @old_article_columns = @new_article_columns
       @old_archive_columns = @new_archive_columns
       ActiveRecord::Migrator.migrate("#{SPEC}/db/migrate", 0)
-      @new_article_columns = @connection.columns("articles").collect(&:name)
-      @new_archive_columns = @connection.columns("archived_articles").collect(&:name)
+      @new_article_columns = columns("articles")
+      @new_archive_columns = columns("archived_articles")
       (@old_article_columns - @new_article_columns).should == [ 'permalink' ]
       (@old_archive_columns - @new_archive_columns).should == [ 'permalink' ]
     end
