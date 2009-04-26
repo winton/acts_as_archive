@@ -91,3 +91,11 @@ def indexes
     r["Column_name"]
   end
 end
+
+def migrate_up(directory='migrate')
+  @old_article_columns = columns("articles")
+  @old_archive_columns = columns("archived_articles")
+  ActiveRecord::Migrator.migrate("#{SPEC}/db/#{directory}")
+  @new_article_columns = columns("articles")
+  @new_archive_columns = columns("archived_articles")
+end

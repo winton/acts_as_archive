@@ -9,20 +9,14 @@ describe ActsAsArchive::Migration do
   
   describe 'method_missing_with_archive' do
     
-    before(:each) do
-      @old_article_columns = columns("articles")
-      @old_archive_columns = columns("archived_articles")
-      ActiveRecord::Migrator.migrate("#{SPEC}/db/migrate")
-      @new_article_columns = columns("articles")
-      @new_archive_columns = columns("archived_articles")
-    end
-    
     it 'should migrate both tables up' do
+      migrate_up
       (@new_article_columns - @old_article_columns).should == [ 'permalink' ]
       (@new_archive_columns - @old_archive_columns).should == [ 'permalink' ]
     end
     
     it 'should migrate both tables down' do
+      migrate_up
       @old_article_columns = @new_article_columns
       @old_archive_columns = @new_archive_columns
       ActiveRecord::Migrator.migrate("#{SPEC}/db/migrate", 0)
@@ -30,6 +24,14 @@ describe ActsAsArchive::Migration do
       @new_archive_columns = columns("archived_articles")
       (@old_article_columns - @new_article_columns).should == [ 'permalink' ]
       (@old_archive_columns - @new_archive_columns).should == [ 'permalink' ]
+    end
+    
+    it "should not touch the archive's deleted_at column" do
+      connection.add_column(:articles, :deleted_at, :datetime)
+      Article.reset_column_information
+      migrate_up("migrate_2")
+      (@old_article_columns - @new_article_columns).should == [ 'deleted_at' ]
+      (@old_archive_columns - @new_archive_columns).should == []
     end
   end
 end
