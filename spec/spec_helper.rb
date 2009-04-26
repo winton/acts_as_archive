@@ -1,5 +1,5 @@
 $TESTING=true
-SPEC = File.dirname(__FILE__)
+SPEC = File.expand_path(File.dirname(__FILE__))
 
 require 'rubygems'
 require 'active_record'
@@ -72,17 +72,16 @@ def establish_test_db
   logger_file.sync = true
   @logger = Logger.new(logger_file)
   ActiveRecord::Base.logger = @logger
-  # Drop articles and archived_articles
+  # The database should have only a simple articles table
   connection.execute("DROP TABLE IF EXISTS articles")
   connection.execute("DROP TABLE IF EXISTS archived_articles")
   connection.execute("DROP TABLE IF EXISTS schema_migrations")
-  # Create articles table
   connection.create_table(:articles) do |t|
     t.string :title
     t.string :body
   end
-  # Load model
-  require "#{SPEC}/db/models/article"
+  # Load the model
+  load "#{SPEC}/db/models/article.rb"
 end
 
 def indexes

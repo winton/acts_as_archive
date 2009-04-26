@@ -42,6 +42,7 @@ end
 
 desc "Run specs"
 Spec::Rake::SpecTask.new do |t|
+  t.rcov = true
   t.spec_opts = ["--format", "specdoc", "--colour"]
   t.spec_files = FileList["spec/**/*_spec.rb"]
 end
