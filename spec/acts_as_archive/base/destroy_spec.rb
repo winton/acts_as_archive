@@ -9,7 +9,7 @@ describe ActsAsArchive::Base::Destroy do
   
   describe 'delete_all!' do
     
-    before(:each) do
+    before(:all) do
       create_records
     end
     
@@ -23,13 +23,13 @@ describe ActsAsArchive::Base::Destroy do
   
   describe 'delete_all' do
     
-    before(:each) do
+    before(:all) do
       @articles = create_records
     end
     
     describe 'with conditions' do
       
-      before(:each) do
+      before(:all) do
         # Mini delete_all parameter test
         Article.delete_all [ 'id = ?', @articles[0].id ]
         Article.delete_all "id = #{@articles[1].id}"
@@ -51,7 +51,7 @@ describe ActsAsArchive::Base::Destroy do
     
     describe 'without conditions' do
       
-      before(:each) do
+      before(:all) do
         Article.delete_all
       end
       
@@ -74,7 +74,7 @@ describe ActsAsArchive::Base::Destroy do
     
     describe d do
     
-      before(:each) do
+      before(:all) do
         @articles = create_records
         Article.find(@articles[0..1].collect(&:id)).each do |a|
           a.send(d)
