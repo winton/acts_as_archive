@@ -1,5 +1,6 @@
 .DS_Store
 coverage
+pkg
 tmp
 
 spec/db/log/*.log

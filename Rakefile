@@ -4,7 +4,7 @@ require 'rake/gempackagetask'
 require 'spec/rake/spectask'
 
 GEM_NAME = 'acts_as_archive'
-PKG_FILES = FileList['**/*'] - FileList['coverage', 'coverage/**/*', 'spec/db/log/*.log']
+PKG_FILES = FileList['**/*'] - FileList['coverage', 'coverage/**/*', 'pkg', 'pkg/**/*', 'spec/db/log/*.log']
 
 spec = Gem::Specification.new do |s|
   s.author = "Winton Welsh"
@@ -35,7 +35,6 @@ end
 
 desc "Generate gemspec"
 task :gemspec do
-  
   File.open("#{File.dirname(__FILE__)}/#{GEM_NAME}.gemspec", 'w') do |f|
     f.write(spec.to_ruby)
   end
