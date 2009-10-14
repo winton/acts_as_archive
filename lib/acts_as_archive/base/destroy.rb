@@ -22,11 +22,11 @@ module ActsAsArchive
           select_cols = column_names.clone
           if insert_cols.include?('deleted_at')
             unless import
-              select_cols[select_cols.index('deleted_at')] = "'#{Time.now.to_s(:db)}'"
+              select_cols[select_cols.index('deleted_at')] = "'#{Time.now.utc.to_s(:db)}'"
             end
           else
             insert_cols << 'deleted_at'
-            select_cols << "'#{Time.now.to_s(:db)}'"
+            select_cols << "'#{Time.now.utc.to_s(:db)}'"
           end
           connection.execute(%{
             INSERT INTO archived_#{table_name} (#{insert_cols.join(', ')})

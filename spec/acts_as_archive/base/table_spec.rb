@@ -58,7 +58,7 @@ describe ActsAsArchive::Base::Table do
     end
     
     it "should move deleted records to the archive" do
-      create_records(Article, :deleted_at => Time.now)
+      create_records(Article, :deleted_at => Time.now.utc)
       Article.migrate_from_acts_as_paranoid
       Article.count.should == 0
       Article::Archive.count.should == 5

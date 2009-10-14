@@ -17,7 +17,7 @@ spec = Gem::Specification.new do |s|
   s.platform = Gem::Platform::RUBY
   s.require_path = "lib"
   s.summary = "Don't delete your records, move them to a different table"
-  s.version = "0.1.3"
+  s.version = "0.1.4"
 end
 
 desc "Package gem"

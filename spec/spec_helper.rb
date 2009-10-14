@@ -17,7 +17,7 @@ def article_match?(original, copy)
   copy.title.should == original.title
   copy.body.should == original.body
   if copy.respond_to?(:deleted_at)
-    copy.deleted_at.strftime('%j%H%M').should == Time.now.strftime('%j%H%M')
+    copy.deleted_at.strftime('%j%H%M').should == Time.now.utc.strftime('%j%H%M')
   end
 end
 
