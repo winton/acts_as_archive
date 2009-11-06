@@ -1,0 +1,12 @@
+require 'rubygems'
+require 'rake'
+
+begin
+  require 'active_wrapper/tasks'
+  
+  ActiveWrapper::Tasks.new(
+    :base => File.dirname(__FILE__),
+    :env => ENV['ENV']
+  )
+rescue Exception
+end

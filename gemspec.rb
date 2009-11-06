@@ -7,6 +7,7 @@ GEM_SPEC = Gem::Specification.new do |s|
   s.homepage = "http://github.com/winton/#{GEM_NAME}"
   s.summary = ""
   # == CONFIGURE ==
+  s.add_dependency('winton-active_wrapper', '>=0.1.2')
   s.executables << GEM_NAME
   s.extensions  << "install"
   s.extra_rdoc_files = [ "README.markdown" ]
