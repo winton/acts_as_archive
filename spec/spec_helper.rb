@@ -1,9 +1,8 @@
 $TESTING=true
 SPEC = File.dirname(__FILE__)
-$:.unshift File.expand_path("#{SPEC}/../lib")
 
-require 'gem_template'
 require 'pp'
+require File.expand_path("#{SPEC}/../rails/init")
 
 Spec::Runner.configure do |config|
 end
