@@ -1,5 +1,6 @@
 .DS_Store
 *.gem
+*.gemspec
 coverage
 pkg
 spec/db/config/database.yml
