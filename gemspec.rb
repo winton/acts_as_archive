@@ -9,7 +9,6 @@ GEM_SPEC = Gem::Specification.new do |s|
   # == CONFIGURE ==
   s.add_dependency('winton-active_wrapper', '>=0.1.2')
   s.executables << GEM_NAME
-  s.extensions  << "install"
   s.extra_rdoc_files = [ "README.markdown" ]
   s.files = GEM_FILES.to_a
   s.has_rdoc = false
