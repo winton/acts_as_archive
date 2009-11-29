@@ -13,20 +13,8 @@ Tested with Ruby 1.8.6, 1.8.7, and 1.9.1.
 Install
 -------
 
-script/plugin:
-
 <pre>
-script/plugin install git://github.com/winton/acts_as_archive.git
-</pre>
-
-rubygems:
-
-<pre>
-# terminal
-sudo gem install winton-acts_as_archive
-
-# environment.rb
-config.gem "winton-acts_as_archive", :lib => "acts_as_archive", :source => "http://gems.github.com"
+sudo gem install acts_as_archive --source http://gemcutter.org
 </pre>
 
 Update models
