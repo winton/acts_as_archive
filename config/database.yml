@@ -1,0 +1,6 @@
+development:
+  adapter: mysql
+  database: gem_template
+  username: root
+  password:
+  host: localhost
