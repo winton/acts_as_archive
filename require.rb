@@ -1,21 +1,21 @@
 require 'rubygems'
-require 'dep'
+gem 'require'
+require 'require'
 
-Dep do
+Require File.dirname(__FILE__) do
   gem(:active_wrapper, '=0.2.3') { require 'active_wrapper' }
-  gem :dep, '=0.1.2'
+  gem :require, '=0.1.6'
   gem(:rake, '=0.8.7') { require 'rake' }
   gem :rspec, '=1.3.0'
   
   gemspec do
     author 'Winton Welsh'
     dependencies do
-      gem :dep
+      gem :require
     end
     email 'mail@wintoni.us'
     name 'gem_template'
     homepage "http://github.com/winton/#{name}"
-    root File.expand_path("#{File.dirname(__FILE__)}/../")
     summary ""
     version '0.1.0'
   end
@@ -27,11 +27,11 @@ Dep do
     gem(:active_wrapper)
     gem(:rake) { require 'rake/gempackagetask' }
     gem(:rspec) { require 'spec/rake/spectask' }
-    require 'dep/tasks'
+    require 'require/tasks'
   end
   
   spec_helper do
-    require 'dep/spec_helper'
+    require 'require/spec_helper'
     require 'lib/gem_template'
     require 'pp'
   end
