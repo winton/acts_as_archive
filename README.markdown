@@ -17,6 +17,12 @@ Install
 sudo gem install acts_as_archive --source http://gemcutter.org
 </pre>
 
+**environment.rb**:
+
+<pre>
+config.gem 'acts_as_archive'
+</pre>
+
 Update models
 -------------
 
@@ -37,7 +43,7 @@ Terminal:
 
 <pre>
 cd your_rails_app
-acts_as_archive
+acts_as_archive Article
 </pre>
 
 This command creates your archive tables (<code>archived_articles</code> as per the example).

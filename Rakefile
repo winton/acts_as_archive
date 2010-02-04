@@ -17,7 +17,7 @@ spec = Gem::Specification.new do |s|
   s.platform = Gem::Platform::RUBY
   s.require_path = "lib"
   s.summary = "Don't delete your records, move them to a different table"
-  s.version = "0.1.4"
+  s.version = "0.1.6"
 end
 
 desc "Package gem"
@@ -28,8 +28,8 @@ end
 desc "Install gem"
 task :install do
   Rake::Task['gem'].invoke
-  `sudo gem uninstall #{GEM_NAME} -x`
-  `sudo gem install pkg/#{GEM_NAME}*.gem`
+  `gem uninstall #{GEM_NAME} -x`
+  `gem install pkg/#{GEM_NAME}*.gem`
   `rm -Rf pkg`
 end
 
@@ -42,7 +42,6 @@ end
 
 desc "Run specs"
 Spec::Rake::SpecTask.new do |t|
-  t.rcov = true
   t.spec_opts = ["--format", "specdoc", "--colour"]
   t.spec_files = FileList["spec/**/*_spec.rb"]
 end

@@ -3,6 +3,17 @@ require File.dirname(__FILE__) + "/base/restore"
 require File.dirname(__FILE__) + "/base/table"
 
 module ActsAsArchive
+  
+  def self.update(*models)
+    models.each do |klass|
+      if klass.respond_to?(:acts_as_archive?) && klass.acts_as_archive?
+        klass.create_archive_table
+        klass.migrate_from_acts_as_paranoid
+        klass.create_archive_indexes
+      end
+    end
+  end
+  
   module Base
     def self.included(base)
       base.extend ActMethods
