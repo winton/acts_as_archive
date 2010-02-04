@@ -14,10 +14,10 @@ Require File.dirname(__FILE__) do
       gem :require
     end
     email 'mail@wintoni.us'
-    name 'gem_template'
+    name 'acts_as_archive'
     homepage "http://github.com/winton/#{name}"
-    summary ""
-    version '0.1.0'
+    summary "Don't delete your records, move them to a different table"
+    version '0.2.0'
   end
   
   lib do
