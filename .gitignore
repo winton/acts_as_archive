@@ -1,14 +1,7 @@
 .DS_Store
-<<<<<<< HEAD
-coverage
-pkg
-tmp
-
-spec/db/log/*.log
-=======
 *.gem
 *.gemspec
 coverage
 pkg
+spec/db/log/*.log
 tmp
->>>>>>> e5cd59729f755a3487717603caf0e59f5753c34b
