@@ -5,16 +5,11 @@ Don't delete your records, move them to a different table.
 
 Like <code>acts\_as\_paranoid</code>, but doesn't mess with your SQL queries.
 
-Compatibility
--------------
-
-Tested with Ruby 1.8.6, 1.8.7, and 1.9.1. 
-
 Install
 -------
 
 <pre>
-sudo gem install acts_as_archive --source http://gemcutter.org
+sudo gem install acts_as_archive
 </pre>
 
 **environment.rb**:
@@ -39,18 +34,16 @@ end
 Run acts\_as\_archive
 ---------------------
 
-Terminal:
-
 <pre>
 cd your_rails_app
 acts_as_archive Article
 </pre>
 
+Run this command every time you add <code>acts\_as\_archive</code> to a new model.
+
 This command creates your archive tables (<code>archived_articles</code> as per the example).
 
 Archive tables mirror your table's structure, but with an additional <code>deleted_at</code> column.
-
-Run this command every time you add <code>acts\_as\_archive</code> to a new model.
 
 That's it!
 ----------
@@ -62,7 +55,7 @@ Records move into the archive table instead of being destroyed.
 What if my schema changes?
 --------------------------
 
-Any new migrations on your table are automatically applied to the archive table.
+New migrations are automatically applied to the archive table.
 
 Query the archive
 -----------------
@@ -85,7 +78,7 @@ Article.restore_all([ 'id = ?', 1 ])
 Auto-migrate from acts\_as\_paranoid
 ------------------------------------
 
-If you previously used <code>acts\_as\_paranoid</code>, running the <code>acts\_as\_archive</code>
+If you previously used <code>acts\_as\_paranoid</code>, the <code>acts\_as\_archive</code>
 command will automatically move your deleted records to the archive table
 (see <a href="#run_acts_as_archive">_Run acts\_as\_archive_</a>).
 
@@ -104,5 +97,5 @@ class Article < ActiveRecord::Base
 end
 </pre>
 
-Run the <code>acts\_as\_archive</code> command any time you add new indexes
+Run the <code>acts\_as\_archive</code> command upon adding new indexes
 (see <a href="#run_acts_as_archive">_Run acts\_as\_archive_</a>).
