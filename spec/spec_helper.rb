@@ -1,13 +1,5 @@
-$TESTING=true
-SPEC = File.expand_path(File.dirname(__FILE__))
-
-require 'rubygems'
-require 'active_record'
-require 'logger'
-require 'yaml'
-require 'pp'
-
-require File.expand_path("#{SPEC}/../rails/init")
+require File.expand_path("#{File.dirname(__FILE__)}/../require")
+Require.spec_helper!
 
 Spec::Runner.configure do |config|
 end
@@ -52,12 +44,6 @@ def create_records(klass=Article, values={})
     })
     klass.find(x)
   end
-end
-
-def debug(object)
-  puts "<pre>"
-  pp object
-  puts "</pre>"
 end
 
 def establish_test_db
