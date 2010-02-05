@@ -39,7 +39,7 @@ def create_records(klass=Article, values={})
       end
     end
     connection.execute(%{
-      INSERT INTO #{table} (#{cols.collect { |c| "`#{c}`" }.join(', ')})
+      INSERT INTO #{table} (#{cols.collect { |c| "#{c}" }.join(', ')})
         VALUES (#{vals.join(', ')})
     })
     klass.find(x)
@@ -71,10 +71,7 @@ def establish_test_db
 end
 
 def indexes
-  query = "SHOW INDEX FROM archived_#{Article.table_name}"
-  connection.select_all(query).collect do |r|
-    r["Column_name"]
-  end
+  Article.send(:archive_table_indexed_columns)
 end
 
 def migrate_up(directory='migrate')
