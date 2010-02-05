@@ -29,21 +29,22 @@ class Article < ActiveRecord::Base
 end
 </pre>
 
-<a name="run_acts_as_archive"></a>
+<a name="create_archive_tables"></a>
 
-Run acts\_as\_archive
+Create archive tables
 ---------------------
 
+Add this line to a migration:
+
 <pre>
-cd your_rails_app
-acts_as_archive Article
+ActsAsArchive.update Article, Comment
 </pre>
 
-Run this command every time you add <code>acts\_as\_archive</code> to a new model.
-
-This command creates your archive tables (<code>archived_articles</code> as per the example).
+Replace <code>Article, Comment</code> with your own models that use <code>acts_as_archive</code>.
 
 Archive tables mirror your table's structure, but with an additional <code>deleted_at</code> column.
+
+There is an [alternate way to create archive tables](http://wiki.github.com/winton/acts_as_archive/alternatives-to-migrations) if you don't like migrations.
 
 That's it!
 ----------
@@ -56,6 +57,8 @@ What if my schema changes?
 --------------------------
 
 New migrations are automatically applied to the archive table.
+
+No action is necessary on your part.
 
 Query the archive
 -----------------
@@ -78,9 +81,9 @@ Article.restore_all([ 'id = ?', 1 ])
 Auto-migrate from acts\_as\_paranoid
 ------------------------------------
 
-If you previously used <code>acts\_as\_paranoid</code>, the <code>acts\_as\_archive</code>
-command will automatically move your deleted records to the archive table
-(see <a href="#run_acts_as_archive">_Run acts\_as\_archive_</a>).
+If you previously used <code>acts\_as\_paranoid</code>, the <code>ActsAsArchive.update</code>
+call will automatically move your deleted records to the archive table
+(see <a href="#create_archive_tables">_Create archive tables_</a>).
 
 Original <code>deleted_at</code> values are preserved.
 
@@ -97,5 +100,5 @@ class Article < ActiveRecord::Base
 end
 </pre>
 
-Run the <code>acts\_as\_archive</code> command upon adding new indexes
-(see <a href="#run_acts_as_archive">_Run acts\_as\_archive_</a>).
+Call <code>ActsAsArchive.update</code> upon adding new indexes
+(see <a href="#create_archive_tables">_Create archive tables_</a>).
