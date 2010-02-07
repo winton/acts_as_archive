@@ -2,9 +2,9 @@ require 'rubygems'
 gem 'require'
 require 'require'
 
-Require File.dirname(__FILE__) do
+Require do
   gem(:activerecord) { require 'active_record' }
-  gem :require, '=0.1.8'
+  gem :require, '=0.2.1'
   gem(:rake, '=0.8.7') { require 'rake' }
   gem :rspec, '=1.3.0'
   
