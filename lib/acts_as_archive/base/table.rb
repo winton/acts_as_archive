@@ -6,6 +6,14 @@ module ActsAsArchive
         unless base.included_modules.include?(InstanceMethods)
           base.send :extend, ClassMethods
           base.send :include, InstanceMethods
+          
+          if base.connection.class.to_s.include?('Mysql')
+            base.send :extend, ActsAsArchive::Base::Adapters::MySQL
+          elsif base.connection.class.to_s.include?('PostgreSQL')
+            base.send :extend, ActsAsArchive::Base::Adapters::PostgreSQL
+          else
+            raise 'acts_as_archive does not support this database adapter'
+          end
         end
       end
 
@@ -19,7 +27,7 @@ module ActsAsArchive
           if table_exists? && !archive_table_exists?
             connection.execute(%{
               CREATE TABLE archived_#{table_name}
-                #{"ENGINE=InnoDB" if connection.class.to_s == "ActiveRecord::ConnectionAdapters::MysqlAdapter"}
+                #{"ENGINE=InnoDB" if connection.class.to_s.include?('Mysql')}
                 AS SELECT * from #{table_name}
                 WHERE false;
             })
@@ -53,43 +61,6 @@ module ActsAsArchive
                 copy_to_archive(condition, true)
               end
             end
-          end
-        end
-
-        private
-
-        def archive_table_indexed_columns
-          case connection.class.to_s
-          when "ActiveRecord::ConnectionAdapters::MysqlAdapter"
-            index_query = "SHOW INDEX FROM archived_#{table_name}"
-            indexes = connection.select_all(index_query).collect do |r|
-              r["Column_name"]
-            end
-          when "ActiveRecord::ConnectionAdapters::PostgreSQLAdapter"
-            #postgresql is...slightly...more complicated
-            index_query = <<EOS
-SELECT c2.relname as index_name
-FROM pg_catalog.pg_class c,
-     pg_catalog.pg_class c2,
-     pg_catalog.pg_index i
-WHERE c.oid = (SELECT c.oid
-               FROM pg_catalog.pg_class c
-               WHERE c.relname ~ '^(archived_#{table_name})$')
-AND c.oid = i.indrelid
-AND i.indexrelid = c2.oid
-EOS
-            indexes = connection.select_all(index_query).collect do |r|
-              r["index_name"]
-            end
-
-            # HACK: reverse engineer the column name
-            # This sucks, but acts_as_archive only adds indexes on single columns anyway so it should work OK
-            # and getting the columns indexed is INCREDIBLY complicated in PostgreSQL.
-            indexes.map do |index|
-              index.split("_on_").last
-            end
-          else
-            raise "Unsupported Database"
           end
         end
       end

@@ -22,6 +22,8 @@ Require do
   
   lib do
     require "lib/acts_as_archive/base"
+    require "lib/acts_as_archive/base/adapters/mysql"
+    require "lib/acts_as_archive/base/adapters/postgresql"
     require "lib/acts_as_archive/base/destroy"
     require "lib/acts_as_archive/base/restore"
     require "lib/acts_as_archive/base/table"
