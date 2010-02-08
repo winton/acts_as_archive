@@ -1,6 +1,7 @@
 .DS_Store
+*.gem
+*.gemspec
 coverage
 pkg
-tmp
-
 spec/db/log/*.log
+tmp

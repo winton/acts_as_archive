@@ -1,3 +1,2 @@
 #!/usr/bin/env ruby
-
 puts `script/runner "ActsAsArchive.update #{ARGV.join ', '}"`
