@@ -1,0 +1,6 @@
+test:
+  adapter: postgresql
+  database: acts_as_archive
+  username: postgres
+  password: 
+  host: localhost
