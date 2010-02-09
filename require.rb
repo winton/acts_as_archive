@@ -17,7 +17,7 @@ Require do
     name 'acts_as_archive'
     homepage "http://github.com/winton/#{name}"
     summary "Don't delete your records, move them to a different table"
-    version '0.2.0'
+    version '0.2.1'
   end
   
   lib do
