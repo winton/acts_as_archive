@@ -4,6 +4,10 @@ Require.spec_helper!
 Spec::Runner.configure do |config|
 end
 
+def db_type
+  ENV['DB_TYPE'] ? ENV['DB_TYPE'] : 'mysql'
+end
+
 def article_match?(original, copy)
   copy.id.should == original.id
   copy.title.should == original.title
@@ -49,7 +53,7 @@ end
 def establish_test_db
   # Establish connection
   unless ActiveRecord::Base.connected?
-    config = YAML::load(File.open("#{SPEC}/db/config/database.yml"))
+    config = YAML::load(File.open("#{SPEC}/db/config/database.#{db_type}.yml"))
     ActiveRecord::Base.configurations = config
     ActiveRecord::Base.establish_connection(config['test'])
   end
