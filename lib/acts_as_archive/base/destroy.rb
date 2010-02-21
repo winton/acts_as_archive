@@ -47,6 +47,7 @@ module ActsAsArchive
           unless new_record?
             self.class.copy_to_archive("#{self.class.primary_key} = #{id}")
           end
+          @destroyed = true
           freeze
         end
 

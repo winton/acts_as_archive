@@ -93,6 +93,11 @@ describe ActsAsArchive::Base::Destroy do
           article_match?(original, copy)
         end
       end
+      
+      it "should mark the object as destroyed" do
+        @articles[3].send(d)
+        @articles[3].destroyed?.should == true
+      end
     end
   end
 end
