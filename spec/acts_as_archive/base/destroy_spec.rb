@@ -20,6 +20,20 @@ describe ActsAsArchive::Base::Destroy do
     end
     
   end
+
+  describe 'destroy!' do
+
+    before(:all) do
+      create_records
+      @article = Article.first
+    end
+
+    it "should really destroy a records" do
+      @article.destroy!
+      Article::Archive.count.should == 0
+    end
+
+  end
   
   describe 'delete_all' do
     
