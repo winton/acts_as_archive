@@ -106,13 +106,13 @@ Call <code>ActsAsArchive.update</code> upon adding new indexes
 Delete records without archiving
 --------------------------------
 
-To destroy a record without archiving it, use:
+To destroy a record without archiving:
 
 <pre>
 article.destroy!
 </pre>
 
-To delete records without archiving, use:
+To delete multiple records without archiving:
 
 <pre>
 Article.delete_all!(["id in (?)", [1,2,3]])
