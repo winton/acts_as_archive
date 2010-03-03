@@ -14,6 +14,7 @@ module ActsAsArchive
         def copy_from_archive(conditions)
           add_conditions!(where = '', conditions)
           col_names = column_names - [ 'deleted_at' ]
+          col_names.map! { |col| connection.quote_column_name(col) }
           connection.execute(%{
             INSERT INTO #{table_name} (#{col_names.join(', ')})
               SELECT #{col_names.join(', ')}
