@@ -26,12 +26,11 @@ module ActsAsArchive
             end
           else
             insert_cols << 'deleted_at'
-
-            insert_cols.map! { |col| connection.quote_column_name(col) }
-            select_cols.map! { |col| connection.quote_column_name(col) }
-
             select_cols << "'#{Time.now.utc.to_s(:db)}'"
           end
+
+          insert_cols.map! { |col| connection.quote_column_name(col) }
+          select_cols.map! { |col| col =~ /^\'/ ? col : connection.quote_column_name(col) }
 
           connection.execute(%{
             INSERT INTO archived_#{table_name} (#{insert_cols.join(', ')})

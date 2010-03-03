@@ -43,7 +43,7 @@ def create_records(klass=Article, values={})
       end
     end
     connection.execute(%{
-      INSERT INTO #{table} (#{cols.collect { |c| "#{c}" }.join(', ')})
+      INSERT INTO #{table} (#{cols.collect { |c| "#{connection.quote_column_name(c)}" }.join(', ')})
         VALUES (#{vals.join(', ')})
     })
     klass.find(x)
@@ -69,6 +69,7 @@ def establish_test_db
   connection.create_table(:articles) do |t|
     t.string :title
     t.string :body
+    t.boolean :read # break mysql w/o quotation
   end
   # Load the model
   load "#{SPEC}/db/models/article.rb"
