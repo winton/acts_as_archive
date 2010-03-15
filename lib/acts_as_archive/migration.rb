@@ -32,7 +32,7 @@ module ActsAsArchive
           connection = ActiveRecord::Base.connection
           args[0] = "archived_" + ActiveRecord::Migrator.proper_table_name(args[0])
           if method == :rename_table
-            args[1] = "archived_" + args[1]
+            args[1] = "archived_" + args[1].to_s
           end
           if connection.table_exists?(args[0])
             connection.send(method, *args, &block)
