@@ -31,8 +31,14 @@ Require do
   end
   
   spec_helper do
+    gem(:active_wrapper)
     require 'require/spec_helper'
     require 'lib/gem_template'
     require 'pp'
+  end
+  
+  spec_rakefile do
+    gem(:rake)
+    gem(:active_wrapper) { require 'active_wrapper/tasks' }
   end
 end

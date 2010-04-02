@@ -3,6 +3,6 @@
 *.gemspec
 coverage
 pkg
-spec/db/config/database.yml
-spec/db/log
+spec/config/database.yml
+spec/log
 tmp
