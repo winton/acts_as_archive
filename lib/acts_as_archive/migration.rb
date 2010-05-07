@@ -6,8 +6,10 @@ module ActsAsArchive
         base.send :extend, ClassMethods
         base.class_eval do
           class <<self
-            alias_method :method_missing_without_archive, :method_missing
-            alias_method :method_missing, :method_missing_with_archive
+            unless method_defined?(:method_missing_without_archive)
+              alias_method :method_missing_without_archive, :method_missing
+              alias_method :method_missing, :method_missing_with_archive
+            end
           end
         end
       end
