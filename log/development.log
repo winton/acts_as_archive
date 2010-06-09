@@ -1,6 +1,0 @@
-  [4;36;1mSQL (0.2ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
-  [4;35;1mUser Load (59.6ms)[0m   [0mSELECT * FROM `users` ORDER BY users.id DESC LIMIT 1[0m
-  [4;36;1mUser Columns (21.6ms)[0m   [0;1mSHOW FIELDS FROM `users`[0m
-  [4;36;1mSQL (0.3ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
-  [4;35;1mSQL (0.3ms)[0m   [0mSHOW TABLES[0m
-  [4;36;1mUser Columns (13.0ms)[0m   [0;1mSHOW FIELDS FROM `users`[0m
