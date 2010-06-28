@@ -1,2 +1,1 @@
-require File.expand_path("#{File.dirname(__FILE__)}/../config/dep")
-Require.rails_init!
+require File.expand_path(File.dirname(__FILE__) + '/../lib/gem_template')
