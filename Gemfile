@@ -25,6 +25,11 @@ end
 
 group :spec do
   gem 'active_wrapper', v[:active_wrapper], :require => %w(active_wrapper)
+  gem 'rspec', v[:rspec], :require => %w(
+    spec/adapters/mock_frameworks/rspec
+    spec/runner/formatter/progress_bar_formatter
+    spec/runner/formatter/text_mate_formatter
+  )
 end
 
 group :spec_rake do
