@@ -2,7 +2,7 @@ source "http://rubygems.org"
 
 v = {
   :active_wrapper => '=0.2.7',
-  :bundler => '=1.0.0.beta.2',
+  :bundler => '=1.0.0.beta.5',
   :rake => '=0.8.7',
   :rspec => '=1.3.0'
 }
