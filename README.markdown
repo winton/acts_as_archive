@@ -24,7 +24,7 @@ Update models
 Add <code>acts\_as\_archive</code> to your models:
 
 <pre>
-class Article < ActiveRecord::Base
+class Article &lt; ActiveRecord::Base
   acts_as_archive
 end
 </pre>
