@@ -5,11 +5,11 @@ GemTemplate::Gems.require(:spec)
 
 require 'active_wrapper'
 
-Spec::Runner.configure do |config|
-end
-
 require "#{$root}/lib/gem_template"
 require 'pp'
+
+Spec::Runner.configure do |config|
+end
 
 $db, $log, $mail = ActiveWrapper.new(
   :base => File.dirname(__FILE__),
