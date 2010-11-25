@@ -8,7 +8,7 @@ unless defined?(GemTemplate::Gems)
       VERSIONS = {
         :active_wrapper => '=0.3.2',
         :rake => '=0.8.7',
-        :rspec => '=1.3.0'
+        :rspec => '=1.3.1'
       }
     
       TYPES = {
