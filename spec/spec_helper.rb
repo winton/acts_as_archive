@@ -1,5 +1,16 @@
-require File.expand_path("#{File.dirname(__FILE__)}/../require")
-Require.spec_helper!
+$root = File.expand_path('../../', __FILE__)
+SPEC = "#{$root}/spec"
+require "#{$root}/lib/acts_as_archive/gems"
+
+ActsAsArchive::Gems.require(:spec)
+
+require 'active_record'
+
+require "#{$root}/lib/acts_as_archive"
+
+require 'logger'
+require 'yaml'
+require 'pp'
 
 Spec::Runner.configure do |config|
 end
@@ -85,4 +96,11 @@ def migrate_up(directory='migrate')
   ActiveRecord::Migrator.migrate("#{SPEC}/db/#{directory}")
   @new_article_columns = columns("articles")
   @new_archive_columns = columns("archived_articles")
+end
+
+# For use with rspec textmate bundle
+def debug(object)
+  puts "<pre>"
+  puts object.pretty_inspect.gsub('<', '&lt;').gsub('>', '&gt;')
+  puts "</pre>"
 end

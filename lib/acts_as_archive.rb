@@ -1,5 +1,17 @@
-require File.expand_path("#{File.dirname(__FILE__)}/../require")
-Require.lib!
+require File.dirname(__FILE__) + '/acts_as_archive/gems'
+
+ActsAsArchive::Gems.require(:lib)
+
+$:.unshift File.dirname(__FILE__) + '/acts_as_archive'
+
+require 'base'
+require 'base/adapters/mysql'
+require 'base/adapters/postgresql'
+require 'base/destroy'
+require 'base/restore'
+require 'base/table'
+require 'migration'
+require 'version'
 
 module ActsAsArchive
   
@@ -17,3 +29,6 @@ module ActsAsArchive
     end
   end
 end
+
+ActiveRecord::Base.send(:include, ActsAsArchive::Base)
+ActiveRecord::Migration.send(:include, ActsAsArchive::Migration)
