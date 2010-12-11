@@ -2,5 +2,6 @@
 *.gem
 coverage
 pkg
-spec/db/log/*.log
+spec/config/database.yml
+spec/log
 tmp

@@ -6,16 +6,17 @@ unless defined?(ActsAsArchive::Gems)
     class Gems
     
       VERSIONS = {
+        :active_wrapper => '=0.3.4',
         :rake => '=0.8.7',
         :rspec => '=1.3.1'
       }
     
       TYPES = {
         :gemspec => [],
-        :gemspec_dev => [ :rspec ],
+        :gemspec_dev => [ :active_wrapper, :rspec ],
         :lib => [],
         :rake => [ :rake, :rspec ],
-        :spec => [ :rspec ]
+        :spec => [ :active_wrapper, :rspec ]
       }
       
       class <<self
