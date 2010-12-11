@@ -6,7 +6,6 @@ unless defined?(ActsAsArchive::Gems)
     class Gems
     
       VERSIONS = {
-        :activerecord => '=3.0.3',
         :rake => '=0.8.7',
         :rspec => '=1.3.1'
       }
@@ -16,7 +15,7 @@ unless defined?(ActsAsArchive::Gems)
         :gemspec_dev => [ :rspec ],
         :lib => [],
         :rake => [ :rake, :rspec ],
-        :spec => [ :activerecord, :rspec ]
+        :spec => [ :rspec ]
       }
       
       class <<self
