@@ -16,7 +16,8 @@ unless defined?(GemTemplate::Gems)
         :gemspec_dev => [ :active_wrapper, :rspec ],
         :lib => [],
         :rake => [ :rake, :rspec ],
-        :spec => [ :active_wrapper, :rspec ]
+        :spec => [ :active_wrapper, :rspec ],
+        :spec_rake => [ :active_wrapper ]
       }
       
       class <<self
