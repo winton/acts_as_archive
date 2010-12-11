@@ -11,7 +11,7 @@ require 'pp'
 Spec::Runner.configure do |config|
 end
 
-$db, $log, $mail = ActiveWrapper.new(
+$db, $log, $mail = ActiveWrapper.setup(
   :base => File.dirname(__FILE__),
   :env => 'test'
 )
