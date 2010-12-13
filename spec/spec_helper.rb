@@ -6,6 +6,7 @@ ActsAsArchive::Gems.require(:spec)
 require 'active_wrapper'
 
 require "#{$root}/lib/acts_as_archive"
+require "#{$root}/spec/fixtures/article"
 require 'pp'
 
 Spec::Runner.configure do |config|

@@ -1,5 +1,5 @@
-require File.expand_path(File.dirname(__FILE__) + '/../lib/gem_template/gems')
-GemTemplate::Gems.require(:spec_rake)
+require File.expand_path(File.dirname(__FILE__) + '/../lib/acts_as_archive/gems')
+ActsAsArchive::Gems.require(:spec_rake)
 
 require 'active_wrapper/tasks'
 

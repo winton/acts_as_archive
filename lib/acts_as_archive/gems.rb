@@ -2,19 +2,21 @@ unless defined?(ActsAsArchive::Gems)
   
   require 'rubygems'
   
-  module ActsAsArchive
+  class ActsAsArchive
     class Gems
     
       VERSIONS = {
         :active_wrapper => '=0.3.4',
+        :also_migrate => '0.2.1',
+        :mover => '0.3.3',
         :rake => '=0.8.7',
         :rspec => '=1.3.1'
       }
     
       TYPES = {
-        :gemspec => [],
+        :gemspec => [ :also_migrate, :mover ],
         :gemspec_dev => [ :active_wrapper, :rspec ],
-        :lib => [],
+        :lib => [ :also_migrate, :mover ],
         :rake => [ :rake, :rspec ],
         :spec => [ :active_wrapper, :rspec ],
         :spec_rake => [ :active_wrapper ]
