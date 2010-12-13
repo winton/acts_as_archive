@@ -5,9 +5,9 @@ ActsAsArchive::Gems.require(:lib)
 require 'also_migrate'
 require 'mover'
 
-$:.unshift File.dirname(__FILE__) + '/acts_as_archive'
+$:.unshift File.dirname(__FILE__)
 
-require 'version'
+require 'acts_as_archive/version'
 
 class ActsAsArchive
   
