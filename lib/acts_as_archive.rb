@@ -49,12 +49,16 @@ class ActsAsArchive
         
         options = args.last.is_a?(::Hash) ? args.pop : {}
         options[:copy] = true
-        options[:magic] = 'deleted_at' if options[:magic].nil?
-        options[:add] = [[ options[:magic], :datetime ]]
-        options[:ignore] = options[:magic]
-        options[:timestamps] = false if options[:timestamps].nil?
         
-        unless options[:archive]
+        if options[:archive]
+          options[:magic] = 'restored_at'
+        else
+          options[:magic] = 'deleted_at' if options[:magic].nil?
+          options[:add] = [[ options[:magic], :datetime ]]
+          options[:ignore] = options[:magic]
+          options[:subtract] = 'restored_at'
+          options[:timestamps] = false if options[:timestamps].nil?
+          
           if args.empty?
             class_eval <<-EVAL
               class Archive < ActiveRecord::Base
@@ -67,12 +71,7 @@ class ActsAsArchive
           args.each do |klass|
             klass.class_eval <<-EVAL
               record_timestamps = #{options[:timestamps].inspect}
-              acts_as_archive(
-                #{self},
-                :archive => true,
-                :magic => nil,
-                :subtract => #{options[:magic] ? options[:magic].inspect : 'nil'}
-              )
+              acts_as_archive(#{self}, :archive => true)
             EVAL
             self.reflect_on_all_associations.each do |association|
               puts association.klass.inspect
