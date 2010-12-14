@@ -2,8 +2,8 @@ require 'spec_helper'
 
 describe ActsAsArchive do
   it "should" do
-    [ 1, 0, 1 ].each { |v| $db.migrate(v) }
-    a = Article.create
+    [ 8, 0, 8 ].each { |v| $db.migrate(v) }
+    a = Record.create
     a.destroy
   end
 end

@@ -15,6 +15,7 @@ class ActsAsArchive
     attr_accessor :configuration
     
     def find(from)
+      from = [ from ] unless from.is_a?(::Array)
       (@configuration || []).select do |hash|
         if from[0].is_a?(::String)
           from.include?(hash[:from].table_name)
@@ -44,7 +45,7 @@ class ActsAsArchive
 
     module ActMethods
       def acts_as_archive(*args)
-        return if ActsAsArchive.find(self)
+        return unless ActsAsArchive.find(self).empty?
         
         options = args.last.is_a?(::Hash) ? args.pop : {}
         options[:copy] = true
@@ -53,28 +54,35 @@ class ActsAsArchive
         options[:ignore] = options[:magic]
         options[:timestamps] = false if options[:timestamps].nil?
         
-        if args.empty?
-          class_eval <<-EVAL
-            class Archive < ActiveRecord::Base
-              set_table_name "archived_#{self.table_name}"
-            end
-          EVAL
-          args << self::Archive
-        end
+        unless options[:archive]
+          if args.empty?
+            class_eval <<-EVAL
+              class Archive < ActiveRecord::Base
+                set_table_name "archived_#{self.table_name}"
+              end
+            EVAL
+            args << self::Archive
+          end
         
-        args.each do |klass|
-          klass.class_eval <<-EVAL
-            record_timestamps = #{options[:timestamps].inspect}
-            acts_as_archive(
-              #{self},
-              :magic => nil,
-              :migrate => false,
-              :timestamps => true,
-              :subtract => #{options[:magic] ? options[:magic].inspect : 'nil'}
-            )
-          EVAL
-          unless options[:migrate] == false
-            self.also_migrate klass.table_name, options
+          args.each do |klass|
+            klass.class_eval <<-EVAL
+              record_timestamps = #{options[:timestamps].inspect}
+              acts_as_archive(
+                #{self},
+                :archive => true,
+                :magic => nil,
+                :subtract => #{options[:magic] ? options[:magic].inspect : 'nil'}
+              )
+            EVAL
+            self.reflect_on_all_associations.each do |association|
+              puts association.klass.inspect
+              if !ActsAsArchive.find(association.klass).empty? && association.options[:dependent]
+                klass.send association.macro, association.name, association.options
+              end
+            end
+            unless options[:migrate] == false
+              self.also_migrate klass.table_name, options
+            end
           end
         end
         

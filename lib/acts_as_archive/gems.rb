@@ -6,6 +6,7 @@ unless defined?(ActsAsArchive::Gems)
     class Gems
     
       VERSIONS = {
+        :activesupport => '=3.0.3',
         :active_wrapper => '=0.3.4',
         :also_migrate => '0.2.1',
         :mover => '0.3.3',
@@ -18,7 +19,7 @@ unless defined?(ActsAsArchive::Gems)
         :gemspec_dev => [ :active_wrapper, :rspec ],
         :lib => [ :also_migrate, :mover ],
         :rake => [ :rake, :rspec ],
-        :spec => [ :active_wrapper, :rspec ],
+        :spec => [ :activesupport, :active_wrapper, :rspec ],
         :spec_rake => [ :active_wrapper ]
       }
       
