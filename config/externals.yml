@@ -1,0 +1,6 @@
+also_migrate:
+  repo: git://github.com/winton/also_migrate.git
+  path: vendor
+mover:
+  repo: git://github.com/winton/mover.git
+  path: vendor

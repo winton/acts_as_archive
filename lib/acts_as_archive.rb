@@ -2,6 +2,9 @@ require File.dirname(__FILE__) + '/acts_as_archive/gems'
 
 ActsAsArchive::Gems.require(:lib)
 
+$:.unshift File.expand_path(File.dirname(__FILE__) + '/../vendor/also_migrate/lib')
+$:.unshift File.expand_path(File.dirname(__FILE__) + '/../vendor/mover/lib')
+
 require 'also_migrate'
 require 'mover'
 
@@ -47,6 +50,9 @@ class ActsAsArchive
       def acts_as_archive(*args)
         return unless ActsAsArchive.find(self).empty?
         
+        ActsAsArchive.configuration ||= []
+        ActsAsArchive.configuration << (config = { :from => self })
+        
         options = args.last.is_a?(::Hash) ? args.pop : {}
         options[:copy] = true
         
@@ -74,9 +80,11 @@ class ActsAsArchive
               acts_as_archive(#{self}, :archive => true)
             EVAL
             self.reflect_on_all_associations.each do |association|
-              puts association.klass.inspect
               if !ActsAsArchive.find(association.klass).empty? && association.options[:dependent]
-                klass.send association.macro, association.name, association.options
+                options = association.options.dup
+                options[:class_name] = "::#{association.class_name}::Archive"
+                options[:foreign_key] = association.primary_key_name
+                klass.send association.macro, association.name, options
               end
             end
             unless options[:migrate] == false
@@ -85,12 +93,8 @@ class ActsAsArchive
           end
         end
         
-        ActsAsArchive.configuration ||= []
-        ActsAsArchive.configuration << {
-          :from => self,
-          :to => args,
-          :options => options
-        }
+        config[:to] = args
+        config[:options] = options
       end
     end
   end

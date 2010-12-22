@@ -5,3 +5,4 @@ pkg
 spec/config/database.yml
 spec/log
 tmp
+vendor
