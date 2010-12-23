@@ -10,7 +10,9 @@ unless defined?(ActsAsArchive::Gems)
         :active_wrapper => '=0.3.4',
         :also_migrate => '0.2.1',
         :externals => '1.0.2',
+        :framework_fixture => '0.1.2',
         :mover => '0.3.3',
+        :'rack-test' => '0.5.6',
         :rake => '=0.8.7',
         :rspec => '=1.3.1'
       }
@@ -20,7 +22,9 @@ unless defined?(ActsAsArchive::Gems)
         :gemspec_dev => [ :active_wrapper, :externals, :rspec ],
         :lib => [ :also_migrate, :mover ],
         :rake => [ :rake, :rspec ],
-        :spec => [ :activesupport, :active_wrapper, :rspec ],
+        :spec => [ :'rack-test', :rspec ],
+        :spec_first => [ :framework_fixture ],
+        :spec_non_framework => [ :activesupport, :active_wrapper ],
         :spec_rake => [ :active_wrapper ]
       }
       

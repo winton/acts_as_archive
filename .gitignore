@@ -3,6 +3,7 @@
 coverage
 pkg
 spec/config/database.yml
+spec/fixtures/build
 spec/log
 tmp
 vendor

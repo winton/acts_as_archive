@@ -1,0 +1,33 @@
+rails:
+  <3:
+    frameworks/rails2:
+      - app/controllers/application_controller.rb
+      - config/routes.rb
+      - vendor/plugins/plugin/rails/init.rb
+    helpers: &helpers
+      - app/helpers/verify_helper.rb
+    models: &models
+      - app/models/belongs_to.rb
+      - app/models/has_many.rb
+      - app/models/has_many_through.rb
+      - app/models/has_many_through_through.rb
+      - app/models/has_one.rb
+      - app/models/has_one_through.rb
+      - app/models/has_one_through_through.rb
+      - app/models/record.rb
+  <4:
+    frameworks/rails3:
+      - app/controllers/application_controller.rb
+      - config/routes.rb
+      - Gemfile
+    helpers:
+      <<: *helpers
+    models:
+      <<: *models
+sinatra:
+  <1:
+    frameworks/sinatra:
+      - application.rb
+  <2:
+    frameworks/sinatra:
+      - application.rb

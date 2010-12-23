@@ -1,0 +1,1 @@
+require "#{$root}/lib/acts_as_archive"
