@@ -9,7 +9,6 @@ describe ActsAsArchive::Gems do
     ActsAsArchive::Gems.config.gemsets = [
       "#{$root}/spec/fixtures/gemsets.yml"
     ]
-    ActsAsArchive::Gems.config.testing = true
     ActsAsArchive::Gems.config.warn = true
     
     ActsAsArchive::Gems.gemspec true

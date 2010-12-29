@@ -31,30 +31,24 @@ if defined?(Spec::Rake::SpecTask)
 end
 
 namespace :gems do
-  desc "Install gems (DEV=1|0 DOCS=1|0 SUDO=1|0)"
+  desc "Install gems (DEV=0 DOCS=0 GEMSPEC=default SUDO=0)"
   task :install do
-    file = File.dirname(__FILE__) + '/gems'
-    sudo = (ENV['SUDO'] ||= '0').to_i
-    docs = (ENV['DOCS'] ||= '0').to_i
-    sudo = sudo == 1 ? 'sudo' : ''
-    docs = docs == 1 ? '' : '--no-ri --no-rdoc'
-    gems = []
+    dev = ENV['DEV'] == '1'
+    docs = ENV['DOCS'] == '1' ? '' : '--no-ri --no-rdoc'
+    gemset = ENV['GEMSET']
+    sudo = ENV['SUDO'] == '1' ? 'sudo' : ''
     
-    if File.exists?(file)
-      File.open(file, 'r') do |f|
-        gems = f.readlines.collect do |line|
-          line.split(' ')
-        end
-      end
+    ActsAsArchive::Gems.gemset = gemset if gemset
+    
+    if dev
+      gems = ActsAsArchive::Gems.gemspec.development_dependencies
     else
-      gems = ActsAsArchive::Gems::TYPES[:gemspec]
-      gems = ActsAsArchive::Gems::TYPES[:gemspec_dev] if ENV['DEV'] == '1'
-      gems.collect! do |g|
-        [ g.to_s, ActsAsArchive::Gems::VERSIONS[g] ]
-      end
+      gems = ActsAsArchive::Gems.gemspec.dependencies
     end
     
-    gems.each do |(name, version)|      
+    gems.each do |name|
+      name = name.to_s
+      version = ActsAsArchive::Gems.versions[name]
       if Gem.source_index.find_name(name, version).empty?
         version = version ? "-v #{version}" : ''
         system "#{sudo} gem install #{name} #{version} #{docs}"
@@ -65,15 +59,20 @@ namespace :gems do
   end
 end
 
-desc "Install gem locally"
-task :install => :package do
-  sh %{gem install pkg/#{gemspec.name}-#{gemspec.version}}
-end
-
 desc "Validate the gemspec"
 task :gemspec do
   gemspec.validate
 end
 
+<<<<<<< HEAD
 task :package => :gemspec
 task :default => :spec
+=======
+desc "Install gem locally"
+task :install => :package do
+  sh %{gem install pkg/#{gemspec.name}-#{gemspec.version}}
+end
+
+task :default => :spec
+task :package => :gemspec
+>>>>>>> bafdf8353a6838ac0e9fc75395de82a96b8c8f3e
