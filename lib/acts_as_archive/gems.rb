@@ -1,6 +1,5 @@
 unless defined?(ActsAsArchive::Gems)
   
-  require 'ostruct'
   require 'yaml'
   
   class ActsAsArchive
