@@ -2,8 +2,8 @@
 lib = File.expand_path('../lib/', __FILE__)
 $:.unshift lib unless $:.include?(lib)
  
-require 'gem_template/gems'
-GemTemplate::Gems.gemset ||= :default
+require 'acts_as_archive/gems'
+ActsAsArchive::Gems.gemset ||= :default
 
 Gem::Specification.new do |s|
   ActsAsArchive::Gems.gemspec.hash.each do |key, value|
