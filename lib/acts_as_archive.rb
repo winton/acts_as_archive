@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/acts_as_archive/gems'
 
-ActsAsArchive::Gems.require(:lib)
+ActsAsArchive::Gems.activate %w(also_migrate mover)
 
 $:.unshift File.expand_path(File.dirname(__FILE__) + '/../vendor/also_migrate/lib')
 $:.unshift File.expand_path(File.dirname(__FILE__) + '/../vendor/mover/lib')
@@ -9,8 +9,6 @@ require 'also_migrate'
 require 'mover'
 
 $:.unshift File.dirname(__FILE__)
-
-require 'acts_as_archive/version'
 
 class ActsAsArchive
   

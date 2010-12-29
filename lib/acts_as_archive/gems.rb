@@ -1,49 +1,105 @@
 unless defined?(ActsAsArchive::Gems)
   
-  require 'rubygems'
+  require 'ostruct'
+  require 'yaml'
   
   class ActsAsArchive
-    class Gems
-    
-      VERSIONS = {
-        :activesupport => '=3.0.3',
-        :active_wrapper => '=0.3.4',
-        :also_migrate => '0.2.1',
-        :externals => '1.0.2',
-        :framework_fixture => '0.1.2',
-        :mover => '0.3.3',
-        :'rack-test' => '0.5.6',
-        :rake => '=0.8.7',
-        :rspec => '=1.3.1'
-      }
-    
-      TYPES = {
-        :gemspec => [ :also_migrate, :mover ],
-        :gemspec_dev => [ :active_wrapper, :externals, :rspec ],
-        :lib => [ :also_migrate, :mover ],
-        :rake => [ :rake, :rspec ],
-        :spec => [ :'rack-test', :rspec ],
-        :spec_first => [ :framework_fixture ],
-        :spec_non_framework => [ :activesupport, :active_wrapper ],
-        :spec_rake => [ :active_wrapper ]
-      }
-      
+    module Gems
       class <<self
         
-        def lockfile
-          file = File.expand_path('../../../gems', __FILE__)
-          unless File.exists?(file)
-            File.open(file, 'w') do |f|
-              Gem.loaded_specs.each do |key, value|
-                f.puts "#{key} #{value.version.version}"
-              end
+        attr_accessor :configs, :gemset, :gemsets, :gemspec, :testing, :versions, :warn
+        
+        Gems.configs = [ "#{File.expand_path('../../../', __FILE__)}/config/gemsets.yml" ]
+        Gems.testing = false
+        Gems.warn = true
+        
+        class Gemspec
+          attr_accessor :hash
+          
+          def initialize(hash)
+            @hash = hash
+            @hash.each do |key, value|
+              self.class.send(:define_method, key) { value }
             end
           end
         end
         
-        def require(type=nil)
-          (TYPES[type] || TYPES.values.flatten.compact).each do |name|
-            gem name.to_s, VERSIONS[name]
+        def activate(*gems)
+          begin
+            require 'rubygems' if !defined?(::Gem) || @testing
+          rescue LoadError
+            puts "rubygems library could not be required" if @warn
+          end
+          
+          self.gemset = :default unless defined?(@gemset) && @gemset
+          
+          gems.flatten.collect(&:to_sym).each do |name|
+            version = @versions[name]
+            if defined?(gem)
+              gem name.to_s, version
+            else
+              puts "#{name} #{"(#{version})" if version} failed to activate" if @warn
+            end
+          end
+        end
+        
+        def gemset=(gemset)
+          if gemset
+            @gemset = gemset.to_sym
+        
+            @gemsets = @configs.reverse.collect { |config|
+              if config.is_a?(::String)
+                YAML::load(File.read(config)) rescue {}
+              elsif config.is_a?(::Hash)
+                config
+              end
+            }.inject({}) do |hash, config|
+              deep_merge(hash, symbolize_keys(config))
+            end
+        
+            @versions = @gemsets[@gemspec.name.to_sym].inject({}) do |hash, (key, value)|
+              if value.is_a?(::String)
+                hash[key] = value
+              elsif value.is_a?(::Hash) && key == @gemset
+                value.each { |k, v| hash[k] = v }
+              end
+              hash
+            end
+          else
+            @gemset = nil
+            @gemsets = nil
+            @versions = nil
+          end
+        end
+        
+        def reload_gemspec
+          data =
+            YAML::load(
+              File.read(
+                "#{File.expand_path('../../../', __FILE__)}/config/gemspec.yml"
+              )
+            ) rescue {}
+          
+          @gemspec = Gemspec.new(data)
+        end
+        
+        Gems.reload_gemspec
+      
+        private
+      
+        def deep_merge(first, second)
+          merger = lambda do |key, v1, v2|
+            Hash === v1 && Hash === v2 ? v1.merge(v2, &merger) : v2
+          end
+          first.merge(second, &merger)
+        end
+      
+        def symbolize_keys(hash)
+          return {} unless hash.is_a?(::Hash)
+          hash.inject({}) do |options, (key, value)|
+            value = symbolize_keys(value) if value.is_a?(::Hash)
+            options[(key.to_sym rescue key) || key] = value
+            options
           end
         end
       end

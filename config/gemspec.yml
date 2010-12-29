@@ -1,0 +1,15 @@
+name: acts_as_archive
+version: 0.2.5
+authors:
+  - Winton Welsh
+email: mail@wintoni.us
+homepage: http://github.com/winton/acts_as_archive
+summary: Don't delete your records, move them to a different table
+description: Don't delete your records, move them to a different table. Like acts_as_paranoid, but doesn't mess with your SQL queries.
+dependencies:
+  - also_migrate
+  - mover
+development_dependencies:
+  - active_wrapper
+  - externals
+  - rspec
