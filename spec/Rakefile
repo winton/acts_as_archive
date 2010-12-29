@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 require File.expand_path(File.dirname(__FILE__) + '/../lib/acts_as_archive/gems')
 ActsAsArchive::Gems.activate :active_wrapper
+=======
+require File.expand_path(File.dirname(__FILE__) + '/../lib/gem_template/gems')
+GemTemplate::Gems.activate(:active_wrapper)
+>>>>>>> a77b86e4ad5e105a89ecdbf8aeb0e7d4bcf6845a
 
 require 'active_wrapper/tasks'
 
