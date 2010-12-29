@@ -2,25 +2,25 @@ require 'spec_helper'
 
 describe ActsAsArchive::Gems do
   
+  before(:each) do
+    @old_config = ActsAsArchive::Gems.config
+    
+    ActsAsArchive::Gems.config.gemspec = "#{$root}/spec/fixtures/gemspec.yml"
+    ActsAsArchive::Gems.config.gemsets = [
+      "#{$root}/spec/fixtures/gemsets.yml"
+    ]
+    ActsAsArchive::Gems.config.testing = true
+    ActsAsArchive::Gems.config.warn = true
+    
+    ActsAsArchive::Gems.gemspec true
+    ActsAsArchive::Gems.gemset = nil
+  end
+  
+  after(:each) do
+    ActsAsArchive::Gems.config = @old_config
+  end
+  
   describe :activate do
-    before(:each) do
-      ActsAsArchive::Gems.configs = [
-        "#{$root}/spec/fixtures/gemsets.yml"
-      ]
-      ActsAsArchive::Gems.gemset = nil
-      ActsAsArchive::Gems.testing = true
-    end
-    
-    it "should warn if unable to require rubygems" do
-      ActsAsArchive::Gems.stub!(:require)
-      ActsAsArchive::Gems.should_receive(:require).with('rubygems').and_raise(LoadError)
-      ActsAsArchive::Gems.stub!(:gem)
-      out = capture_stdout do
-        ActsAsArchive::Gems.activate :rspec
-      end
-      out.should =~ /rubygems library could not be required/
-    end
-    
     it "should activate gems" do
       ActsAsArchive::Gems.stub!(:gem)
       ActsAsArchive::Gems.should_receive(:gem).with('rspec', '=1.3.1')
@@ -31,9 +31,9 @@ describe ActsAsArchive::Gems do
   
   describe :gemset= do
     before(:each) do
-      ActsAsArchive::Gems.configs = [
+      ActsAsArchive::Gems.config.gemsets = [
         {
-          :gem_template => {
+          :name => {
             :rake => '>0.8.6',
             :default => {
               :externals => '=1.0.2'
@@ -55,7 +55,7 @@ describe ActsAsArchive::Gems do
     
       it "should set @gemsets" do
         ActsAsArchive::Gems.gemsets.should == {
-          :gem_template => {
+          :name => {
             :rake => ">0.8.6",
             :default => {
               :externals => '=1.0.2',
@@ -93,7 +93,7 @@ describe ActsAsArchive::Gems do
     
       it "should set @gemsets" do
         ActsAsArchive::Gems.gemsets.should == {
-          :gem_template => {
+          :name => {
             :rake => ">0.8.6",
             :default => {
               :externals => '=1.0.2',
@@ -126,21 +126,6 @@ describe ActsAsArchive::Gems do
   end
   
   describe :reload_gemspec do
-    before(:all) do
-      ActsAsArchive::Gems.configs = [
-        "#{$root}/spec/fixtures/gemsets.yml"
-      ]
-      ActsAsArchive::Gems.gemset = :default
-    end
-  
-    before(:each) do
-      @gemspec_path = "#{$root}/gem_template.gemspec"
-      @gemspec = File.read(@gemspec_path)
-      yml = File.read("#{$root}/spec/fixtures/gemspec.yml")
-      File.stub!(:read).and_return yml
-      ActsAsArchive::Gems.reload_gemspec
-    end
-  
     it "should populate @gemspec" do
       ActsAsArchive::Gems.gemspec.hash.should == {
         "name" => "name",
@@ -168,7 +153,9 @@ describe ActsAsArchive::Gems do
     end
   
     it "should produce a valid gemspec" do
-      gemspec = eval(@gemspec, binding, @gemspec_path)
+      ActsAsArchive::Gems.gemset = :default
+      gemspec = File.expand_path("../../../acts_as_archive.gemspec", __FILE__)
+      gemspec = eval(File.read(gemspec), binding, gemspec)
       gemspec.validate.should == true
     end
   end
