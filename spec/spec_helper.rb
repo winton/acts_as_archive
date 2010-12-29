@@ -1,7 +1,7 @@
 $root = File.expand_path('../../', __FILE__)
 require "#{$root}/lib/gem_template/gems"
 
-GemTemplate::Gems.require(:spec)
+GemTemplate::Gems.activate %w(active_wrapper rspec)
 
 require 'active_wrapper'
 
@@ -11,6 +11,7 @@ require 'pp'
 Spec::Runner.configure do |config|
 end
 
+<<<<<<< HEAD
 $db, $log, $mail = ActiveWrapper.setup(
   :base => File.dirname(__FILE__),
   :env => 'test'
@@ -22,4 +23,14 @@ def debug(object)
   puts "<pre>"
   puts object.pretty_inspect.gsub('<', '&lt;').gsub('>', '&gt;')
   puts "</pre>"
+=======
+def capture_stdout
+  old = $stdout
+  out = StringIO.new
+  $stdout = out
+  yield
+  return out.string
+ensure
+  $stdout = old
+>>>>>>> master
 end
