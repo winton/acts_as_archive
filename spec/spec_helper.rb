@@ -11,7 +11,6 @@ require 'pp'
 Spec::Runner.configure do |config|
 end
 
-<<<<<<< HEAD
 $db, $log, $mail = ActiveWrapper.setup(
   :base => File.dirname(__FILE__),
   :env => 'test'
@@ -23,14 +22,4 @@ def debug(object)
   puts "<pre>"
   puts object.pretty_inspect.gsub('<', '&lt;').gsub('>', '&gt;')
   puts "</pre>"
-=======
-def capture_stdout
-  old = $stdout
-  out = StringIO.new
-  $stdout = out
-  yield
-  return out.string
-ensure
-  $stdout = old
->>>>>>> master
 end
