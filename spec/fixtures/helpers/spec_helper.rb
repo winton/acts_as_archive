@@ -1,4 +1,4 @@
-module VerifyHelper
+module SpecHelper
   
   def all_records
     [
@@ -23,6 +23,15 @@ module VerifyHelper
         :has_one_through_through => HasOneThroughThrough::Archive.all
       }
     ]
+  end
+  
+  def before_each(migrate=true, setup=true)
+    if migrate
+      [ 8, 0, 8 ].each { |v| $db.migrate(v) }
+    end
+    if setup
+      @record, @lengths, @zero_lengths = setup_records
+    end
   end
   
   def setup_records
@@ -55,6 +64,52 @@ module VerifyHelper
     end
     
     [ record, lengths, zero_lengths ]
+  end
+  
+  def should_create_records
+    original, archive = all_records
+    verify_lengths original, @lengths
+    verify_attributes original
+  end
+  
+  def should_move_records_back_to_original_tables
+    @record.destroy
+    Record::Archive.first.destroy
+  
+    original, archive = all_records
+  
+    verify_lengths original, @lengths
+    verify_lengths archive, @zero_lengths
+  
+    verify_attributes original
+  end
+  
+  def should_move_records_to_archive_tables(type)
+    case type
+    when 'delete', 'destroy'
+      @record.send type
+    when 'delete_all', 'destroy_all'
+      Record.send type
+    end
+  
+    original, archive = all_records
+  
+    case type
+    when 'delete', 'delete_all'
+      archive[:record].length.should == 1
+      original[:record].length.should == 0
+    
+      verify_lengths archive, @zero_lengths, :exclude => [ :record ]
+      verify_lengths original, @lengths, :exclude => [ :record ]
+    
+      verify_attributes archive, :only => [ :record ]
+    
+    when 'destroy', 'destroy_all'
+      verify_lengths archive, @lengths
+      verify_lengths original, @zero_lengths
+    
+      verify_attributes archive
+    end
   end
 
   def verify_attributes(records, options={})

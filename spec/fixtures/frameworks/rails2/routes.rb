@@ -42,5 +42,5 @@ ActionController::Routing::Routes.draw do |map|
   # map.connect ':controller/:action/:id'
   # map.connect ':controller/:action/:id.:format'
   
-  map.connect 'pulse', :controller => 'application', :action => 'pulse'
+  map.connect ':action', :controller => 'application'
 end

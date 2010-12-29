@@ -19,16 +19,17 @@ else
   require "#{$root}/lib/acts_as_archive"
 
   ActiveSupport::Dependencies.autoload_paths << "#{$root}/spec/fixtures/models"
-  ActiveSupport::Dependencies.autoload_paths << "#{$root}/spec/fixtures/helpers"
 
   $db, $log, $mail = ActiveWrapper.setup(
-    :base => File.dirname(__FILE__),
+    :base => "#{$root}/spec/fixtures",
     :env => 'test'
   )
   $db.establish_connection
-  
-  include VerifyHelper
 end
+
+ActiveSupport::Dependencies.autoload_paths << "#{$root}/spec/fixtures/helpers"
+
+include SpecHelper
 
 Spec::Runner.configure do |config|
 end

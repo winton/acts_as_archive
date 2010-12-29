@@ -2,8 +2,8 @@
 *.gem
 coverage
 pkg
-spec/config/database.yml
-spec/fixtures/build
-spec/log
+spec/fixtures/config/database.yml
+spec/fixtures/builds
+spec/fixtures/log
 tmp
 vendor
