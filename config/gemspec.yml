@@ -10,4 +10,5 @@ dependencies:
   -
 development_dependencies:
   - active_wrapper
+  - rake
   - rspec
