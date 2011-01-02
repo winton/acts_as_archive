@@ -64,10 +64,6 @@ task :gemspec do
   gemspec.validate
 end
 
-<<<<<<< HEAD
-task :package => :gemspec
-task :default => :spec
-=======
 desc "Install gem locally"
 task :install => :package do
   sh %{gem install pkg/#{gemspec.name}-#{gemspec.version}}
@@ -75,4 +71,3 @@ end
 
 task :default => :spec
 task :package => :gemspec
->>>>>>> bafdf8353a6838ac0e9fc75395de82a96b8c8f3e
