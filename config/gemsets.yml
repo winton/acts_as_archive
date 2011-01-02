@@ -1,5 +1,5 @@
 gem_template:
   rake: >=0.8.7
-  rspec: <2
+  rspec: ~>1.0
   default:
     active_wrapper: =0.3.4
