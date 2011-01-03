@@ -3,7 +3,7 @@ acts_as_archive:
   rspec: ~>1.0
   default:
     activesupport: =3.0.3
-    active_wrapper: =0.3.4
+    active_wrapper-solo: =0.4.1
     also_migrate: =0.2.1
     externals: =1.0.2
     framework_fixture: =0.1.2

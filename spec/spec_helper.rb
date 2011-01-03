@@ -5,7 +5,6 @@ require "#{$root}/lib/acts_as_archive/gems"
 
 ActsAsArchive::Gems.activate :framework_fixture
 
-<<<<<<< HEAD
 require 'framework_fixture'
 FrameworkFixture.generate File.dirname(__FILE__) + '/fixtures'
 
@@ -14,7 +13,10 @@ ActsAsArchive::Gems.activate %w(rack-test rspec)
 if FrameworkFixture.framework
   require 'rack/test'
 else
-  ActsAsArchive::Gems.activate %w(activesupport active_wrapper)
+  ActsAsArchive::Gems.activate %w(activesupport active_wrapper-solo)
+  
+  require 'active_wrapper/gems'
+  ActiveWrapper::Gems.gemset = :ar2
   
   require 'active_support/dependencies'
   require 'active_wrapper'
@@ -33,9 +35,6 @@ end
 ActiveSupport::Dependencies.autoload_paths << "#{$root}/spec/fixtures/helpers"
 
 include SpecHelper
-=======
-require "#{$root}/lib/gem_template"
->>>>>>> 9093a87f65aaf8cf200e846dc25f56d9b0c9df0c
 
 Spec::Runner.configure do |config|
 end

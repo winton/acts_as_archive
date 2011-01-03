@@ -70,30 +70,17 @@ describe ActsAsArchive::Gems do
       end
     
       it "should set Gems.versions" do
-<<<<<<< HEAD:spec/acts_as_archive/gems_spec.rb
         ActsAsArchive::Gems.versions.should == {
-=======
-        GemTemplate::Gems.versions.should == {
           :externals => "=1.0.2",
           :mysql => "=2.8.1",
->>>>>>> 9093a87f65aaf8cf200e846dc25f56d9b0c9df0c:spec/gem_template/gems_spec.rb
           :rake => ">0.8.6",
           :rspec => "=1.3.1"
         }
       end
-<<<<<<< HEAD:spec/acts_as_archive/gems_spec.rb
-    
-      it "should set everything to nil if gemset given nil value" do
-        ActsAsArchive::Gems.gemset = nil
-        ActsAsArchive::Gems.gemset.should == nil
-        ActsAsArchive::Gems.gemsets.should == nil
-        ActsAsArchive::Gems.versions.should == nil
-=======
       
       it "should return proper values for Gems.dependencies" do
-        GemTemplate::Gems.dependencies.should == [ :rake, :mysql ]
-        GemTemplate::Gems.development_dependencies.should == [ :mysql, :rspec ]
->>>>>>> 9093a87f65aaf8cf200e846dc25f56d9b0c9df0c:spec/gem_template/gems_spec.rb
+        ActsAsArchive::Gems.dependencies.should == [ :rake, :mysql ]
+        ActsAsArchive::Gems.development_dependencies.should == [ :mysql, :rspec ]
       end
     end
     
@@ -124,20 +111,16 @@ describe ActsAsArchive::Gems do
       end
     
       it "should set Gems.versions" do
-<<<<<<< HEAD:spec/acts_as_archive/gems_spec.rb
         ActsAsArchive::Gems.versions.should == {
-=======
-        GemTemplate::Gems.versions.should == {
           :mysql2 => "=0.2.6",
->>>>>>> 9093a87f65aaf8cf200e846dc25f56d9b0c9df0c:spec/gem_template/gems_spec.rb
           :rake => ">0.8.6",
           :rspec => "=2.3.0"
         }
       end
       
       it "should return proper values for Gems.dependencies" do
-        GemTemplate::Gems.dependencies.should == [ :rake, :mysql2 ]
-        GemTemplate::Gems.development_dependencies.should == [ :mysql2, :rspec ]
+        ActsAsArchive::Gems.dependencies.should == [ :rake, :mysql2 ]
+        ActsAsArchive::Gems.development_dependencies.should == [ :mysql2, :rspec ]
       end
     end
     
@@ -161,12 +144,12 @@ describe ActsAsArchive::Gems do
     
     it "should return the correct gemset for name gem" do
       Gem.should_receive(:loaded_specs).and_return({ "name" => nil })
-      GemTemplate::Gems.send(:gemset_from_loaded_specs).should == :default
+      ActsAsArchive::Gems.send(:gemset_from_loaded_specs).should == :default
     end
     
     it "should return the correct gemset for name-rspec gem" do
       Gem.should_receive(:loaded_specs).and_return({ "name-rspec2" => nil })
-      GemTemplate::Gems.send(:gemset_from_loaded_specs).should == :rspec2
+      ActsAsArchive::Gems.send(:gemset_from_loaded_specs).should == :rspec2
     end
   end
   
@@ -193,7 +176,6 @@ describe ActsAsArchive::Gems do
     end
   
     it "should create methods from keys of @gemspec" do
-<<<<<<< HEAD:spec/acts_as_archive/gems_spec.rb
       ActsAsArchive::Gems.gemspec.name.should == "name"
       ActsAsArchive::Gems.gemspec.version.should == "0.1.0"
       ActsAsArchive::Gems.gemspec.authors.should == ["Author"]
@@ -201,26 +183,15 @@ describe ActsAsArchive::Gems do
       ActsAsArchive::Gems.gemspec.homepage.should == "http://github.com/author/name"
       ActsAsArchive::Gems.gemspec.summary.should == "Summary"
       ActsAsArchive::Gems.gemspec.description.should == "Description"
-      ActsAsArchive::Gems.gemspec.dependencies.should == ["rake"]
-      ActsAsArchive::Gems.gemspec.development_dependencies.should == ["rspec"]
-=======
-      GemTemplate::Gems.gemspec.name.should == "name"
-      GemTemplate::Gems.gemspec.version.should == "0.1.0"
-      GemTemplate::Gems.gemspec.authors.should == ["Author"]
-      GemTemplate::Gems.gemspec.email.should == "email@email.com"
-      GemTemplate::Gems.gemspec.homepage.should == "http://github.com/author/name"
-      GemTemplate::Gems.gemspec.summary.should == "Summary"
-      GemTemplate::Gems.gemspec.description.should == "Description"
-      GemTemplate::Gems.gemspec.dependencies.should == [
+      ActsAsArchive::Gems.gemspec.dependencies.should == [
         "rake",
         { "default" => ["mysql"] },
         { "rspec2" => [ "mysql2" ] }
       ]
-      GemTemplate::Gems.gemspec.development_dependencies.should == [
+      ActsAsArchive::Gems.gemspec.development_dependencies.should == [
         { "default" => [ "mysql", "rspec" ] },
         { "rspec2" => [ "mysql2", "rspec" ] }
       ]
->>>>>>> 9093a87f65aaf8cf200e846dc25f56d9b0c9df0c:spec/gem_template/gems_spec.rb
     end
   
     it "should produce a valid gemspec" do

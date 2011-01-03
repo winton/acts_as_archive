@@ -10,10 +10,7 @@ dependencies:
   - also_migrate
   - mover
 development_dependencies:
-<<<<<<< HEAD
-  - active_wrapper
+  - active_wrapper-solo
   - externals
-=======
   - rake
->>>>>>> 9093a87f65aaf8cf200e846dc25f56d9b0c9df0c
   - rspec
