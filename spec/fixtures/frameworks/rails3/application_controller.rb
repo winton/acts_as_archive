@@ -15,7 +15,7 @@ class ApplicationController < ActionController::Base
   
   def should_move_records_back_to_original_tables_action
     before_each false, true
-    should_move_records_back_to_original_tables
+    should_move_records_back_to_original_tables(params[:type])
     render :text => '1'
   end
   

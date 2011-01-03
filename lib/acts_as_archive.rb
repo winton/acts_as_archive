@@ -12,21 +12,22 @@ class ActsAsArchive
     
     attr_accessor :configuration, :disabled
     
-    def disable(&block)
-      mutex.synchronize do
-        self.disabled = true
-        block.call
-      end
-    ensure
-      self.disabled = false
-    end
-    
     def deprecate(msg)
       if defined?(::ActiveSupport::Deprecation)
         ::ActiveSupport::Deprecation.warn msg
       else
         puts msg
       end
+    end
+    
+    def disable(&block)
+      @mutex ||= Mutex.new
+      @mutex.synchronize do
+        self.disabled = true
+        block.call
+      end
+    ensure
+      self.disabled = false
     end
     
     def find(from)
@@ -52,12 +53,8 @@ class ActsAsArchive
       end
     end
     
-    def mutex
-      @mutex ||= Mutex.new
-    end
-    
     def update(*args)
-      deprecate "ActsAsArchive.update is depracated and no longer necessary."
+      deprecate "ActsAsArchive.update is deprecated and no longer necessary."
     end
   end
   
@@ -140,6 +137,13 @@ class ActsAsArchive
         end
         $stdout.puts "-- #{self.class}.migrate_from_acts_as_paranoid"
         $stdout.puts "   -> #{"%.4fs" % time.real}"
+      end
+      
+      def restore_all(*args)
+        ActsAsArchive.deprecate "#{self}.restore_all is deprecated, please use #{self}::Archive.delete_all."
+        if defined?(self::Archive)
+          self::Archive.delete_all *args
+        end
       end
     end
     

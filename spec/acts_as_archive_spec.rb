@@ -18,7 +18,7 @@ unless FrameworkFixture.framework
         end
       
         it "should move records back to original tables" do
-          should_move_records_back_to_original_tables
+          should_move_records_back_to_original_tables(type)
         end
       end
     end
@@ -56,7 +56,7 @@ if FrameworkFixture.framework
         end
       
         it "should move records back to original tables" do
-          get "/should_move_records_back_to_original_tables_action"
+          get "/should_move_records_back_to_original_tables_action", :type => type
           last_response.body.should == '1'
         end
       end

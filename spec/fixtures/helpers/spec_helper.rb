@@ -72,9 +72,15 @@ module SpecHelper
     verify_attributes original
   end
   
-  def should_move_records_back_to_original_tables
-    @record.destroy
-    Record::Archive.first.destroy
+  def should_move_records_back_to_original_tables(type)
+    case type
+    when 'delete', 'destroy'
+      @record.send type
+      Record::Archive.first.send type
+    when 'delete_all', 'destroy_all'
+      Record.send type
+      Record::Archive.send type
+    end
   
     original, archive = all_records
   

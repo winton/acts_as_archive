@@ -22,7 +22,7 @@ class Application < Sinatra::Base
   
   get "/should_move_records_back_to_original_tables_action" do
     before_each false, true
-    should_move_records_back_to_original_tables
+    should_move_records_back_to_original_tables(params[:type])
     '1'
   end
   
