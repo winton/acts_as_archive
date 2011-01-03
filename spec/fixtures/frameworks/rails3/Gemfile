@@ -1,11 +1,10 @@
 source 'http://rubygems.org'
 
+gem 'mysql2'
 gem 'rails', '3.0.3'
 gem 'rspec'
 
 gem 'acts_as_archive', :path => "../../../../"
-
-gem 'mysql2', :require => 'mysql2'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'

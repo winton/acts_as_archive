@@ -1,15 +1,13 @@
 rails:
   <3:
-    config:
-      - config/database.yml
     frameworks/rails2:
       - app/controllers/application_controller.rb
       - config/database.yml
       - config/routes.rb
       - vendor/plugins/plugin/rails/init.rb
-    helpers:
+    helpers: &h
       - app/helpers/spec_helper.rb
-    models:
+    models: &m
       - app/models/belongs_to.rb
       - app/models/has_many.rb
       - app/models/has_many_through.rb
@@ -24,21 +22,15 @@ rails:
       - config/database.yml
       - config/routes.rb
       - Gemfile
-    helpers:
-      - app/helpers/spec_helper.rb
-    models:
-      - app/models/belongs_to.rb
-      - app/models/has_many.rb
-      - app/models/has_many_through.rb
-      - app/models/has_many_through_through.rb
-      - app/models/has_one.rb
-      - app/models/has_one_through.rb
-      - app/models/has_one_through_through.rb
-      - app/models/record.rb
-# sinatra:
-#   <1:
-#     frameworks/sinatra:
-#       - application.rb
-#   <2:
-#     frameworks/sinatra:
-#       - application.rb
+    helpers: *h
+    models: *m
+sinatra:
+  <1:
+    frameworks/sinatra: &s
+      - application.rb
+    helpers: *h
+    models: *m
+  <2:
+    frameworks/sinatra: *s
+    helpers: *h
+    models: *m

@@ -25,8 +25,8 @@ unless FrameworkFixture.framework
   end
 end
 
-if FrameworkFixture.rails
-  describe "Rails #{FrameworkFixture.rails}" do
+if FrameworkFixture.framework
+  describe "#{FrameworkFixture.framework} #{FrameworkFixture.exact_version}" do
 
     include Rack::Test::Methods
 

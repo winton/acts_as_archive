@@ -1,0 +1,27 @@
+#!/usr/bin/env ruby
+
+system "spec -f n -c spec"
+
+puts "\n"
+
+ENV['ACTIVERECORD'] = '2'
+system "spec -f n -c spec/acts_as_archive_spec.rb"
+
+ENV.delete 'ACTIVERECORD'
+
+puts "\n"
+
+ENV['RAILS'] = '2'
+system "spec -f n -c spec/acts_as_archive_spec.rb"
+
+puts "\n"
+
+ENV['RAILS'] = '3'
+system "spec -f n -c spec/acts_as_archive_spec.rb"
+
+ENV.delete 'RAILS'
+
+puts "\n"
+
+ENV['SINATRA'] = '1'
+system "spec -f n -c spec/acts_as_archive_spec.rb"

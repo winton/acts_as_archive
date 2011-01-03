@@ -4,6 +4,9 @@ active_wrapper-solo:
 also_migrate:
   repo: git@github.com:winton/also_migrate.git
   path: vendor
+framework_fixture:
+  repo: git@github.com:winton/framework_fixture.git
+  path: vendor
 mover:
   repo: git@github.com:winton/mover.git
   path: vendor
