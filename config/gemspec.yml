@@ -12,5 +12,6 @@ dependencies:
 development_dependencies:
   - active_wrapper-solo
   - externals
+  - framework_fixture
   - rake
   - rspec

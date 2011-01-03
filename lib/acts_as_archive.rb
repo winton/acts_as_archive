@@ -8,9 +8,25 @@ require 'mover'
 $:.unshift File.dirname(__FILE__)
 
 class ActsAsArchive
-  
   class <<self
-    attr_accessor :configuration
+    
+    attr_accessor :configuration, :disabled
+    
+    def disable(&block)
+      mutex.synchronize do
+        self.disabled = true
+        block.call
+        self.disabled = false
+      end
+    end
+    
+    def deprecate(msg)
+      if defined?(::ActiveSupport::Deprecation)
+        ::ActiveSupport::Deprecation.warn msg
+      else
+        puts msg
+      end
+    end
     
     def find(from)
       from = [ from ] unless from.is_a?(::Array)
@@ -34,14 +50,25 @@ class ActsAsArchive
         config[:from].move_to(to, options)
       end
     end
+    
+    def mutex
+      @mutex ||= Mutex.new
+    end
+    
+    def update(*args)
+      deprecate "ActsAsArchive.update is depracated and no longer necessary."
+    end
   end
   
   module Base
     def self.included(base)
-      base.extend ActMethods
+      unless base.included_modules.include?(InstanceMethods)
+        base.extend ClassMethods
+        base.send :include, InstanceMethods
+      end
     end
 
-    module ActMethods
+    module ClassMethods
       def acts_as_archive(*args)
         return unless ActsAsArchive.find(self).empty?
         
@@ -91,6 +118,38 @@ class ActsAsArchive
         config[:to] = args
         config[:options] = options
       end
+      
+      def delete_all!(*args)
+        ActsAsArchive.disable { self.delete_all(*args) }
+      end
+      
+      def destroy_all!(*args)
+        ActsAsArchive.disable { self.destroy_all(*args) }
+      end
+      
+      def migrate_from_acts_as_paranoid
+        time = Benchmark.measure do
+          ActsAsArchive.find(self).each do |config|
+            ActsAsArchive.move(
+              config,
+              "#{config[:options][:magic]} IS NOT NULL",
+              :migrate => true
+            )
+          end
+        end
+        $stdout.puts "-- #{self.class}.migrate_from_acts_as_paranoid"
+        $stdout.puts "   -> #{"%.4fs" % time.real}"
+      end
+    end
+    
+    module InstanceMethods
+      def delete!(*args)
+        ActsAsArchive.disable { self.delete(*args) }
+      end
+      
+      def destroy!(*args)
+        ActsAsArchive.disable { self.destroy(*args) }
+      end
     end
   end
   
@@ -109,32 +168,20 @@ class ActsAsArchive
     
     module InstanceMethods
       def delete_sql_with_archive(sql, name = nil)
-        from, where = /DELETE FROM (.+)/i.match(sql)[1].split(/\s+WHERE\s+/i, 2)
-        from = from.strip.gsub(/`/, '').split(/\s*,\s*/)
+        unless ActsAsArchive.disabled
+          from, where = /DELETE FROM (.+)/i.match(sql)[1].split(/\s+WHERE\s+/i, 2)
+          from = from.strip.gsub(/`/, '').split(/\s*,\s*/)
         
-        ActsAsArchive.find(from).each do |config|
-          ActsAsArchive.move(config, where)
+          ActsAsArchive.find(from).each do |config|
+            ActsAsArchive.move(config, where)
+          end
         end
         
         delete_sql_without_archive(sql, name)
-      end
-      
-      def migrate_from_acts_as_paranoid
-        time = Benchmark.measure do
-          ActsAsArchive.find(self).each do |config|
-            ActsAsArchive.move(
-              config,
-              "#{config[:options][:magic]} IS NOT NULL",
-              :migrate => true
-            )
-          end
-        end
-        $stdout.puts "-- #{self.class}.migrate_from_acts_as_paranoid"
-        $stdout.puts "   -> #{"%.4fs" % time.real}"
       end
     end
   end
 end
 
-ActiveRecord::Base.send(:include, ActsAsArchive::Base)
-ActiveRecord::ConnectionAdapters::DatabaseStatements.send(:include, ActsAsArchive::DatabaseStatements)
+::ActiveRecord::Base.send(:include, ::ActsAsArchive::Base)
+::ActiveRecord::ConnectionAdapters::DatabaseStatements.send(:include, ::ActsAsArchive::DatabaseStatements)
