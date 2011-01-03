@@ -16,8 +16,9 @@ class ActsAsArchive
       mutex.synchronize do
         self.disabled = true
         block.call
-        self.disabled = false
       end
+    ensure
+      self.disabled = false
     end
     
     def deprecate(msg)
