@@ -8,33 +8,50 @@ ActsAsArchive::Gems.activate :framework_fixture
 require 'framework_fixture'
 FrameworkFixture.generate File.dirname(__FILE__) + '/fixtures'
 
-ActsAsArchive::Gems.activate %w(rack-test rspec)
+ActsAsArchive::Gems.activate %w(active_wrapper-solo rack-test rspec)
+require 'active_wrapper/gems'
 
 if FrameworkFixture.framework
   require 'rack/test'
+  
+  if FrameworkFixture.rails == '<3'
+    ActiveWrapper::Gems.gemset = :ar2
+  end
+  
+  require 'active_wrapper'
 else
-  ActsAsArchive::Gems.activate %w(activesupport active_wrapper-solo)
+  if ENV['ACTIVERECORD'] == '2'
+    ActiveWrapper::Gems.gemset = :ar2
+  else
+    ActiveWrapper::Gems.activate %w(activesupport)
+    require 'active_support/dependencies'
+  end
   
-  require 'active_wrapper/gems'
-  ActiveWrapper::Gems.gemset = :ar2
-  
-  require 'active_support/dependencies'
   require 'active_wrapper'
   
   require "#{$root}/lib/acts_as_archive"
 
   ActiveSupport::Dependencies.autoload_paths << "#{$root}/spec/fixtures/models"
+  ActiveSupport::Dependencies.autoload_paths << "#{$root}/spec/fixtures/helpers"
   
-  $db, $log, $mail = ActiveWrapper.setup(
-    :base => "#{$root}/spec/fixtures",
-    :env => 'test'
-  )
-  $db.establish_connection
+  include SpecHelper
 end
 
-ActiveSupport::Dependencies.autoload_paths << "#{$root}/spec/fixtures/helpers"
-
-include SpecHelper
+$db, $log, $mail = ActiveWrapper.setup(
+  :adapter => ActiveWrapper::Gems.gemset == :ar2 ? 'mysql' : 'mysql2',
+  :base => "#{$root}/spec/fixtures",
+  :env => 'test'
+)
+$db.establish_connection
 
 Spec::Runner.configure do |config|
+end
+
+def before_each(migrate=true, setup=true)
+  if migrate
+    [ 8, 0, 8 ].each { |v| $db.migrate(v) }
+  end
+  if setup
+    @record, @lengths, @zero_lengths = setup_records
+  end
 end

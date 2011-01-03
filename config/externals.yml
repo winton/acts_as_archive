@@ -1,9 +1,9 @@
 active_wrapper-solo:
-  repo: git://github.com/winton/active_wrapper.git
+  repo: git@github.com:winton/active_wrapper.git
   path: vendor
 also_migrate:
-  repo: git://github.com/winton/also_migrate.git
+  repo: git@github.com:winton/also_migrate.git
   path: vendor
 mover:
-  repo: git://github.com/winton/mover.git
+  repo: git@github.com:winton/mover.git
   path: vendor

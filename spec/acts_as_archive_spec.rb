@@ -25,8 +25,8 @@ unless FrameworkFixture.framework
   end
 end
 
-if FrameworkFixture.rails == '<3'
-  describe 'Rails 2' do
+if FrameworkFixture.rails
+  describe "Rails #{FrameworkFixture.rails}" do
 
     include Rack::Test::Methods
 
@@ -35,7 +35,7 @@ if FrameworkFixture.rails == '<3'
     end
     
     before(:each) do
-      `#{$root}/spec/fixtures/before_each`
+      before_each true, false
     end
   
     it "should have a pulse" do
