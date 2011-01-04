@@ -141,6 +141,17 @@ module SpecHelper
     verify_lengths archive, @zero_lengths
   
     verify_attributes original
+    
+    case type
+    when 'delete', 'delete_all' then
+      original[:record].first.restored_at.is_a?(::Time).should == true
+    when 'destroy', 'destroy_all' then
+      original.values.each do |records|
+        records.each do |record|
+          record.restored_at.is_a?(::Time).should == true
+        end
+      end
+    end
   end
   
   def should_move_records_to_archive_tables(type)
@@ -180,6 +191,9 @@ module SpecHelper
           record[:integer].should == 1
           record[:created_at].is_a?(::Time).should == true
           record[:updated_at].is_a?(::Time).should == true
+          if record.respond_to?(:deleted_at)
+            record[:deleted_at].is_a?(::Time).should == true
+          end
         end
       end
     end
