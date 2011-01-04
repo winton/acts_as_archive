@@ -14,9 +14,27 @@ class Application < Sinatra::Base
     '1'
   end
   
+  get "/should_have_valid_schema_action" do
+    before_each false, true
+    should_have_valid_schema
+    '1'
+  end
+  
   get "/should_create_records_action" do
     before_each false, true
     should_create_records
+    '1'
+  end
+  
+  get "/should_migrate_record_and_preserve_deleted_at_action" do
+    before_each false, true
+    should_migrate_record_and_preserve_deleted_at
+    '1'
+  end
+  
+  get "/should_emulate_delete_all_action" do
+    before_each false, true
+    should_emulate_delete_all
     '1'
   end
   
@@ -29,6 +47,12 @@ class Application < Sinatra::Base
   get "/should_move_records_to_archive_tables_action" do
     before_each false, true
     should_move_records_to_archive_tables(params[:type])
+    '1'
+  end
+  
+  get "/should_delete_records_without_archiving_action" do
+    before_each false, true
+    should_delete_records_without_archiving(params[:type])
     '1'
   end
 end

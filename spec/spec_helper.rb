@@ -7,6 +7,7 @@ ActsAsArchive::Gems.activate :framework_fixture
 require 'framework_fixture'
 
 if FrameworkFixture.framework == 'rails'
+  ENV['RAILS_ENV'] = 'test'
   FrameworkFixture.generate File.dirname(__FILE__) + '/fixtures'
 end
 
@@ -64,6 +65,7 @@ end
 def before_each(migrate=true, setup=true)
   if migrate
     [ 8, 0, 8 ].each { |v| $db.migrate(v) }
+    Record.reset_column_information
   end
   if setup
     @record, @lengths, @zero_lengths = setup_records

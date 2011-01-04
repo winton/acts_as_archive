@@ -101,10 +101,10 @@ class ActsAsArchive
             EVAL
             self.reflect_on_all_associations.each do |association|
               if !ActsAsArchive.find(association.klass).empty? && association.options[:dependent]
-                options = association.options.dup
-                options[:class_name] = "::#{association.class_name}::Archive"
-                options[:foreign_key] = association.primary_key_name
-                klass.send association.macro, association.name, options
+                opts = association.options.dup
+                opts[:class_name] = "::#{association.class_name}::Archive"
+                opts[:foreign_key] = association.primary_key_name
+                klass.send association.macro, association.name, opts
               end
             end
             unless options[:migrate] == false
@@ -128,22 +128,22 @@ class ActsAsArchive
       def migrate_from_acts_as_paranoid
         time = Benchmark.measure do
           ActsAsArchive.find(self).each do |config|
+            config = config.dup
+            config[:options][:copy] = false
             ActsAsArchive.move(
               config,
-              "#{config[:options][:magic]} IS NOT NULL",
+              "`#{config[:options][:magic]}` IS NOT NULL",
               :migrate => true
             )
           end
         end
-        $stdout.puts "-- #{self.class}.migrate_from_acts_as_paranoid"
+        $stdout.puts "-- #{self}.migrate_from_acts_as_paranoid"
         $stdout.puts "   -> #{"%.4fs" % time.real}"
       end
       
       def restore_all(*args)
-        ActsAsArchive.deprecate "#{self}.restore_all is deprecated, please use #{self}::Archive.delete_all."
-        if defined?(self::Archive)
-          self::Archive.delete_all *args
-        end
+        ActsAsArchive.deprecate "#{self}.restore_all is deprecated, please use #{self}.delete_all."
+        self.delete_all *args
       end
     end
     

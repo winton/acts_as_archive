@@ -4,6 +4,7 @@ class HasManies < ActiveRecord::Migration
       t.string :string, :default => 'string'
       t.integer :integer, :default => '1'
       t.integer :record_id
+      t.datetime :restored_at
       t.timestamps
     end
   end

@@ -4,6 +4,7 @@ class Records < ActiveRecord::Migration
       t.string :string, :default => 'string'
       t.integer :integer, :default => '1'
       t.integer :belongs_to_id
+      t.datetime :restored_at
       t.timestamps
     end
   end

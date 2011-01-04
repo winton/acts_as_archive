@@ -3,6 +3,7 @@ class BelongsTos < ActiveRecord::Migration
     create_table :belongs_tos do |t|
       t.string :string, :default => 'string'
       t.integer :integer, :default => '1'
+      t.datetime :restored_at
       t.timestamps
     end
   end

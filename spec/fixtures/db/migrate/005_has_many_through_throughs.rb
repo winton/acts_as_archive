@@ -5,6 +5,7 @@ class HasManyThroughThroughs < ActiveRecord::Migration
       t.integer :integer, :default => '1'
       t.integer :has_many_through_id
       t.integer :record_id
+      t.datetime :restored_at
       t.timestamps
     end
   end

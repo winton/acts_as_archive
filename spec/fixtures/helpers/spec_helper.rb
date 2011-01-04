@@ -28,6 +28,7 @@ module SpecHelper
   def before_each(migrate=true, setup=true)
     if migrate
       [ 8, 0, 8 ].each { |v| $db.migrate(v) }
+      Record.reset_column_information
     end
     if setup
       @record, @lengths, @zero_lengths = setup_records
@@ -70,6 +71,58 @@ module SpecHelper
     original, archive = all_records
     verify_lengths original, @lengths
     verify_attributes original
+  end
+  
+  def should_delete_records_without_archiving(type)
+    type = "#{type}!"
+    case type
+    when 'delete!', 'destroy!'
+      @record.send type
+    when 'delete_all!', 'destroy_all!'
+      Record.send type
+    end
+
+    Record.count.should == 0
+    Record::Archive.count.should == 0
+  end
+  
+  def should_emulate_delete_all
+    id = @record.id
+    @record.destroy
+    Record.count.should == 0
+    Record::Archive.count.should == 1
+    Record::Archive.restore_all [ "id = ?", id ]
+    Record.count.should == 1
+  end
+  
+  def should_have_valid_schema
+    [
+      BelongsTo, Record, HasOne, HasMany, HasManyThroughThrough,
+      HasManyThrough, HasOneThroughThrough, HasOneThrough
+    ].each do |klass|
+      cols = [ 'string', 'integer', 'restored_at', 'created_at', 'updated_at' ]
+      archive_cols = [ 'string', 'integer', 'created_at', 'updated_at', 'deleted_at' ]
+      (klass.column_names & cols).should == cols
+      (klass::Archive.column_names & archive_cols).should == archive_cols
+    end
+  end
+  
+  def should_migrate_record_and_preserve_deleted_at
+    Record.connection.execute <<-SQL
+      ALTER TABLE records ADD deleted_at DATETIME
+    SQL
+    Record.reset_column_information
+  
+    time = Time.now.utc - 24 * 60 * 60
+    first = Record.first
+    first.update_attribute :deleted_at, time
+    Record.create
+  
+    Record.migrate_from_acts_as_paranoid
+    Record::Archive.first.deleted_at.to_s.should == time.to_s
+    Record::Archive.first.id.should == first.id
+    Record::Archive.count.should == 1
+    Record.count.should == 1
   end
   
   def should_move_records_back_to_original_tables(type)

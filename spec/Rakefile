@@ -4,6 +4,6 @@ ActsAsArchive::Gems.activate :active_wrapper
 require 'active_wrapper/tasks'
 
 ActiveWrapper::Tasks.new(
-  :base => File.dirname(__FILE__),
+  :base => File.dirname(__FILE__) + "/fixtures",
   :env => ENV['ENV']
 )
