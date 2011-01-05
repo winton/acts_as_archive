@@ -16,7 +16,7 @@ class ActsAsArchive
       if defined?(::ActiveSupport::Deprecation)
         ::ActiveSupport::Deprecation.warn msg
       else
-        puts msg
+        $stdout.puts msg
       end
     end
     

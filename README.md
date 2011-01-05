@@ -9,16 +9,32 @@ Install
 -------
 
 <pre>
-sudo gem install acts_as_archive
+gem install acts_as_archive
 </pre>
 
-**environment.rb**:
+### Rails 2
+
+#### config/environment.rb
 
 <pre>
 config.gem 'acts_as_archive'
 </pre>
 
-Update models
+### Rails 3
+
+#### Gemfile
+
+<pre>
+gem 'acts_as_archive'
+</pre>
+
+### Sinatra
+
+<pre>
+require 'acts_as_archive'
+</pre>
+
+Add to models
 -------------
 
 Add <code>acts\_as\_archive</code> to your models:
@@ -29,27 +45,15 @@ class Article &lt; ActiveRecord::Base
 end
 </pre>
 
-<a name="create_archive_tables"></a>
+Migrate
+-------
 
-Create archive tables
----------------------
-
-Add this line to a migration:
-
-<pre>
-ActsAsArchive.update Article, Comment
-</pre>
-
-Replace <code>Article, Comment</code> with your own models that use <code>acts_as_archive</code>.
-
-Archive tables mirror your table's structure, but with an additional <code>deleted_at</code> column.
-
-There is an [alternate way to create archive tables](http://wiki.github.com/winton/acts_as_archive/alternatives-to-migrations) if you don't like migrations.
+Next time you run <code>rake db:migrate</code>, your archive tables will be created automatically.
 
 That's it!
 ----------
 
-Use <code>destroy</code>, <code>delete</code>, and <code>delete_all</code> like you normally would.
+Use <code>destroy</code>, <code>destroy\_all</code>, <code>delete</code>, and <code>delete_all</code> like you normally would.
 
 Records move into the archive table instead of being destroyed.
 
@@ -66,54 +70,43 @@ Query the archive
 Add <code>::Archive</code> to your ActiveRecord class:
 
 <pre>
-Article::Archive.find(:first)
+Article::Archive.first
+</pre>
+
+Delete records without archiving
+--------------------------------
+
+Use any of the destroy methods, but add a bang (!):
+
+<pre>
+Article::Archive.find(:first).destroy!
+Article.delete_all!(["id in (?)", [1,2,3]])
 </pre>
 
 Restore from the archive
 ------------------------
 
-Use <code>restore\_all</code> to copy archived records back to your table:
+Use any of the destroy/delete methods on the archived record to move it back to its original table:
 
 <pre>
-Article.restore_all([ 'id = ?', 1 ])
+Article::Archive.first.destroy
+Article::Archive.delete_all([ "id in (?)", [ 1, 2, 3 ] ])
 </pre>
 
-Auto-migrate from acts\_as\_paranoid
-------------------------------------
+Magic columns
+-------------
 
-If you previously used <code>acts\_as\_paranoid</code>, the <code>ActsAsArchive.update</code>
-call will automatically move your deleted records to the archive table
-(see <a href="#create_archive_tables">_Create archive tables_</a>).
+You will find an extra <code>deleted_at</code> datetime column on the archive table.
 
-Original <code>deleted_at</code> values are preserved.
+You may manually add a <code>restored_at</code> datetime column to the origin table if you wish to store restoration time as well.
 
-Add indexes to the archive table
---------------------------------
+Migrate from acts\_as\_paranoid
+-------------------------------
 
-To keep insertions fast, there are no indexes on your archive table by default.
-
-If you are querying your archive a lot, you will want to add indexes:
+Add this line to a migration, or run it via <code>script/console</code>:
 
 <pre>
-class Article &lt; ActiveRecord::Base
-  acts_as_archive :indexes => [ :id, :created_at, :deleted_at ]
-end
+Article.migrate_from_acts_as_paranoid
 </pre>
 
-Call <code>ActsAsArchive.update</code> upon adding new indexes
-(see <a href="#create_archive_tables">_Create archive tables_</a>).
-
-Delete records without archiving
---------------------------------
-
-To destroy a record without archiving:
-
-<pre>
-article.destroy!
-</pre>
-
-To delete multiple records without archiving:
-
-<pre>
-Article.delete_all!(["id in (?)", [1,2,3]])
-</pre>
+This copies all records with non-null <code>deleted_at</code> values to the archive.
