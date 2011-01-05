@@ -80,7 +80,7 @@ Use any of the destroy methods, but add a bang (!):
 
 <pre>
 Article::Archive.find(:first).destroy!
-Article.delete_all!(["id in (?)", [1,2,3]])
+Article.delete_all!([ "id in (?)", [ 1, 2, 3 ] ])
 </pre>
 
 Restore from the archive
