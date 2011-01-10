@@ -126,11 +126,11 @@ spec/run
 <code>spec/run</code> essentially runs the following:
 
 <pre>
-ACTIVERECORD=3 spec -f n -c spec
-ACTIVERECORD=2 spec -f n -c spec/acts_as_archive_spec.rb
-RAILS=2 spec -f n -c spec/acts_as_archive_spec.rb
-RAILS=3 spec -f n -c spec/acts_as_archive_spec.rb
-SINATRA=1 spec -f n -c spec/acts_as_archive_spec.rb
+ACTIVERECORD=3 spec spec
+ACTIVERECORD=2 spec spec/acts_as_archive_spec.rb
+RAILS=2 spec spec/acts_as_archive_spec.rb
+RAILS=3 spec spec/acts_as_archive_spec.rb
+SINATRA=1 spec spec/acts_as_archive_spec.rb
 </pre>
 
 If you want to hack on the supporting gems ([mover](http://github.com/winton/mover) and [also_migrate](http://github.com/winton/also_migrate)), vendor them with the following command:
