@@ -45,6 +45,8 @@ else
   ActiveSupport::Dependencies.autoload_paths << "#{$root}/spec/fixtures/models"
   ActiveSupport::Dependencies.autoload_paths << "#{$root}/spec/fixtures/helpers"
   
+  Record # Load up an instance so first also_migrate works
+  
   include SpecHelper
 end
 
