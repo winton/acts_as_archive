@@ -1,5 +1,6 @@
 source 'http://rubygems.org'
 
+gem 'active_wrapper-solo'
 gem 'mysql2'
 gem 'rails', '3.0.3'
 gem 'rspec'
