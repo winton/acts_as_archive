@@ -64,7 +64,8 @@ describe ActsAsArchive::Gems do
             :rspec2 => {
               :mysql2 => "=0.2.6",
               :rspec => "=2.3.0"
-            }
+            },
+            :solo => nil
           }
         }
       end
@@ -80,7 +81,11 @@ describe ActsAsArchive::Gems do
       
       it "should return proper values for Gems.dependencies" do
         ActsAsArchive::Gems.dependencies.should == [ :rake, :mysql ]
-        ActsAsArchive::Gems.development_dependencies.should == [ :mysql, :rspec ]
+        ActsAsArchive::Gems.development_dependencies.should == []
+      end
+      
+      it "should return proper values for Gems.gemset_names" do
+        ActsAsArchive::Gems.gemset_names.should == [ :default, :rspec2, :solo ]
       end
     end
     
@@ -105,7 +110,8 @@ describe ActsAsArchive::Gems do
             :rspec2 => {
               :mysql2=>"=0.2.6",
               :rspec => "=2.3.0"
-            }
+            },
+            :solo => nil
           }
         }
       end
@@ -120,7 +126,52 @@ describe ActsAsArchive::Gems do
       
       it "should return proper values for Gems.dependencies" do
         ActsAsArchive::Gems.dependencies.should == [ :rake, :mysql2 ]
-        ActsAsArchive::Gems.development_dependencies.should == [ :mysql2, :rspec ]
+        ActsAsArchive::Gems.development_dependencies.should == []
+      end
+      
+      it "should return proper values for Gems.gemset_names" do
+        ActsAsArchive::Gems.gemset_names.should == [ :default, :rspec2, :solo ]
+      end
+    end
+    
+    describe :solo do
+      before(:each) do
+        ActsAsArchive::Gems.gemset = :solo
+      end
+      
+      it "should set @gemset" do
+        ActsAsArchive::Gems.gemset.should == :solo
+      end
+    
+      it "should set @gemsets" do
+        ActsAsArchive::Gems.gemsets.should == {
+          :name => {
+            :rake => ">0.8.6",
+            :default => {
+              :externals => '=1.0.2',
+              :mysql => "=2.8.1",
+              :rspec => "=1.3.1"
+            },
+            :rspec2 => {
+              :mysql2=>"=0.2.6",
+              :rspec => "=2.3.0"
+            },
+            :solo => nil
+          }
+        }
+      end
+    
+      it "should set Gems.versions" do
+        ActsAsArchive::Gems.versions.should == {:rake=>">0.8.6"}
+      end
+      
+      it "should return proper values for Gems.dependencies" do
+        ActsAsArchive::Gems.dependencies.should == [:rake]
+        ActsAsArchive::Gems.development_dependencies.should == []
+      end
+      
+      it "should return proper values for Gems.gemset_names" do
+        ActsAsArchive::Gems.gemset_names.should == [ :default, :rspec2, :solo ]
       end
     end
     
@@ -168,10 +219,7 @@ describe ActsAsArchive::Gems do
           { "default" => [ "mysql" ] },
           { "rspec2" => [ "mysql2" ] }
         ],
-        "development_dependencies" => [
-          { "default" => [ "mysql", "rspec" ] },
-          { "rspec2" => [ "mysql2", "rspec" ] }
-        ]
+        "development_dependencies" => nil
        }
     end
   
@@ -188,10 +236,7 @@ describe ActsAsArchive::Gems do
         { "default" => ["mysql"] },
         { "rspec2" => [ "mysql2" ] }
       ]
-      ActsAsArchive::Gems.gemspec.development_dependencies.should == [
-        { "default" => [ "mysql", "rspec" ] },
-        { "rspec2" => [ "mysql2", "rspec" ] }
-      ]
+      ActsAsArchive::Gems.gemspec.development_dependencies.should == nil
     end
   
     it "should produce a valid gemspec" do
