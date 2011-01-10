@@ -1,5 +1,5 @@
 require File.expand_path(File.dirname(__FILE__) + '/../lib/acts_as_archive/gems')
-ActsAsArchive::Gems.activate :active_wrapper
+ActsAsArchive::Gems.activate 'active_wrapper-solo'
 
 require 'active_wrapper/tasks'
 

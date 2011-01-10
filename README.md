@@ -116,25 +116,4 @@ This copies all records with non-null <code>deleted_at</code> values to the arch
 Running specs
 -------------
 
-Contributions are always welcome.
-
-<pre>
-gem install acts_as_archive --development
-spec/run
-</pre>
-
-<code>spec/run</code> essentially runs the following:
-
-<pre>
-ACTIVERECORD=3 spec spec
-ACTIVERECORD=2 spec spec/acts_as_archive_spec.rb
-RAILS=2 spec spec/acts_as_archive_spec.rb
-RAILS=3 spec spec/acts_as_archive_spec.rb
-SINATRA=1 spec spec/acts_as_archive_spec.rb
-</pre>
-
-If you want to hack on the supporting gems ([mover](http://github.com/winton/mover) and [also_migrate](http://github.com/winton/also_migrate)), vendor them with the following command:
-
-<pre>
-externals un
-</pre>
+There is a [wiki entry](https://github.com/winton/acts_as_archive/wiki/Running-Specs) that describes the development setup in-depth.

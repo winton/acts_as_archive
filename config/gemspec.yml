@@ -9,9 +9,4 @@ description: Don't delete your records, move them to a different table. Like act
 dependencies:
   - also_migrate
   - mover
-development_dependencies:
-  - active_wrapper-solo
-  - externals
-  - framework_fixture
-  - rake
-  - rspec
+development_dependencies: nil
