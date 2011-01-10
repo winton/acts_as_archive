@@ -81,7 +81,7 @@ Delete records without archiving
 Use any of the destroy methods, but add a bang (!):
 
 <pre>
-Article::Archive.find(:first).destroy!
+Article::Archive.first.destroy!
 Article.delete_all!([ "id in (?)", [ 1, 2, 3 ] ])
 </pre>
 
