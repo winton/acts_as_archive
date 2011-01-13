@@ -173,12 +173,15 @@ class ActsAsArchive
     
     module InstanceMethods
       def delete_sql_with_archive(sql, name = nil)
-        unless ActsAsArchive.disabled
-          from, where = /DELETE FROM (.+)/i.match(sql)[1].split(/\s+WHERE\s+/i, 2)
-          from = from.strip.gsub(/`/, '').split(/\s*,\s*/)
+        @mutex ||= Mutex.new
+        @mutex.synchronize do
+          unless ActsAsArchive.disabled
+            from, where = /DELETE FROM (.+)/i.match(sql)[1].split(/\s+WHERE\s+/i, 2)
+            from = from.strip.gsub(/`/, '').split(/\s*,\s*/)
         
-          ActsAsArchive.find(from).each do |config|
-            ActsAsArchive.move(config, where)
+            ActsAsArchive.find(from).each do |config|
+              ActsAsArchive.move(config, where)
+            end
           end
         end
         
