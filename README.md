@@ -60,9 +60,9 @@ Records move into the archive table instead of being destroyed.
 Automatically archive relationships
 -----------------------------------
 
-If your <code>acts\_as\_archive</code> model's relationship has the <code>:dependent</code> option and also uses <code>acts\_as\_archive</code>, that relationships will archive automatically.
+If your <code>acts\_as\_archive</code> model's relationship has the <code>:dependent</code> option and also uses <code>acts\_as\_archive</code>, that relationship will archive automatically.
 
-__To use this feature, you must declare your relationships before the acts\_as\_archive call within your model!__
+__To use this feature, you must declare your relationships before the <code>acts\_as\_archive</code> call within your model!__
 
 What if my schema changes?
 --------------------------
