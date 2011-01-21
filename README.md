@@ -57,7 +57,12 @@ Use <code>destroy</code>, <code>destroy\_all</code>, <code>delete</code>, and <c
 
 Records move into the archive table instead of being destroyed.
 
-If any of your model's relationships have the <code>:dependent</code> option and also use <code>acts\_as\_archive</code>, those relationships will archive automatically.
+Automatically archive relationships
+-----------------------------------
+
+If your <code>acts\_as\_archive</code> model's relationship has the <code>:dependent</code> option and also uses <code>acts\_as\_archive</code>, that relationships will archive automatically.
+
+__To use this feature, you must declare your relationships before the acts\_as\_archive call within your model!__
 
 What if my schema changes?
 --------------------------
