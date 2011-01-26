@@ -104,6 +104,8 @@ Article::Archive.first.destroy
 Article::Archive.delete_all([ "id in (?)", [ 1, 2, 3 ] ])
 </pre>
 
+Any relationships that were automatically archived will be restored as well.
+
 Magic columns
 -------------
 
