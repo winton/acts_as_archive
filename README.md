@@ -32,23 +32,29 @@ gem 'acts_as_archive'
 
 <pre>
 require 'acts_as_archive'
-</pre>
 
-Add to models
--------------
-
-Add <code>acts\_as\_archive</code> to your models:
-
-<pre>
-class Article &lt; ActiveRecord::Base
-  acts_as_archive
+class Application &lt; Sinatra::Base
+  include ActsAsArchive::Adapters::Sinatra
 end
 </pre>
+
+config/acts\_as\_archive.yml
+----------------------------
+
+<pre>
+Article:
+  - class: Article::Archive
+    table: archived_articles
+</pre>
+
+Specify the name of your model, the name of the archive class, and the name of the archive table.
+
+If the archive model is created automatically if it does not exist.
 
 Migrate
 -------
 
-Next time you run <code>rake db:migrate</code>, your archive tables will be created automatically.
+Run <code>rake db:migrate</code>. Your archive table is created automatically.
 
 That's it!
 ----------
@@ -60,9 +66,7 @@ Records move into the archive table instead of being destroyed.
 Automatically archive relationships
 -----------------------------------
 
-If your <code>acts\_as\_archive</code> model's relationship has the <code>:dependent</code> option and also uses <code>acts\_as\_archive</code>, that relationship will archive automatically.
-
-__To use this feature, you must declare your relationships before the <code>acts\_as\_archive</code> call within your model!__
+If your model's relationship has the <code>:dependent</code> option, and the relationship also uses <code>acts\_as\_archive</code>, that relationship will archive automatically.
 
 What if my schema changes?
 --------------------------
@@ -74,7 +78,7 @@ No action is necessary on your part.
 Query the archive
 -----------------
 
-Add <code>::Archive</code> to your ActiveRecord class:
+Use the Archive model you specified in the configuration:
 
 <pre>
 Article::Archive.first

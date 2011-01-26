@@ -45,8 +45,6 @@ else
   ActiveSupport::Dependencies.autoload_paths << "#{$root}/spec/fixtures/models"
   ActiveSupport::Dependencies.autoload_paths << "#{$root}/spec/fixtures/helpers"
   
-  Record # Load up an instance so first also_migrate works
-  
   include SpecHelper
 end
 
@@ -56,6 +54,10 @@ $db, $log, $mail = ActiveWrapper.setup(
   :env => 'test'
 )
 $db.establish_connection
+
+unless FrameworkFixture.framework
+  ActsAsArchive.load_from_yaml("#{$root}/spec/fixtures")
+end
 
 if FrameworkFixture.framework == 'sinatra'
   FrameworkFixture.generate File.dirname(__FILE__) + '/fixtures'

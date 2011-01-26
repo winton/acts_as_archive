@@ -8,6 +8,7 @@ class Application < Sinatra::Base
   set :raise_errors, true
   set :show_exceptions, false
   
+  include ActsAsArchive::Adapters::Sinatra
   include SpecHelper
   
   get '/pulse' do

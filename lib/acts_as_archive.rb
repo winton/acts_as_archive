@@ -4,6 +4,7 @@ ActsAsArchive::Gems.activate %w(also_migrate mover)
 
 require 'also_migrate'
 require 'mover'
+require 'yaml'
 
 $:.unshift File.dirname(__FILE__)
 
@@ -41,16 +42,32 @@ class ActsAsArchive
       end
     end
     
-    def move(config, where, merge_options={})
-      config[:to].each do |to|
-        options = config[:options].dup.merge(merge_options)
-        if options[:conditions]
-          options[:conditions] += " AND #{where}"
-        elsif where
-          options[:conditions] = where
+    def load_from_yaml(root)
+      if File.exists?(yaml = "#{root}/config/acts_as_archive.yml")
+        YAML.load(File.read(yaml)).each do |klass, config|
+          klass = eval(klass) rescue nil
+          if klass
+            if (%w(class table) - config.last.keys).empty?
+              options = {}
+            else
+              options = config.pop
+            end
+            config.each do |c|
+              klass.acts_as_archive options.merge(c)
+            end
+          end
         end
-        config[:from].move_to(to, options)
       end
+    end
+    
+    def move(config, where, merge_options={})
+      options = config[:options].dup.merge(merge_options)
+      if options[:conditions]
+        options[:conditions] += " AND #{where}"
+      elsif where
+        options[:conditions] = where
+      end
+      config[:from].move_to(config[:to], options)
     end
     
     def update(*args)
@@ -67,17 +84,17 @@ class ActsAsArchive
     end
 
     module ClassMethods
-      def acts_as_archive(*args)
+      def acts_as_archive(options={})
         return unless ActsAsArchive.find(self).empty?
         
         ActsAsArchive.configuration ||= []
         ActsAsArchive.configuration << (config = { :from => self })
         
-        options = args.last.is_a?(::Hash) ? args.pop : {}
         options[:copy] = true
         
         if options[:archive]
           options[:magic] = 'restored_at'
+          klass = options[:class]
         else
           options[:magic] = 'deleted_at' if options[:magic].nil?
           options[:add] = [[ options[:magic], :datetime ]]
@@ -85,35 +102,49 @@ class ActsAsArchive
           options[:subtract] = 'restored_at'
           options[:timestamps] = false if options[:timestamps].nil?
           
-          if args.empty?
-            class_eval <<-EVAL
-              class Archive < ActiveRecord::Base
-                set_table_name "archived_#{self.table_name}"
+          unless options[:class]
+            options[:class] = "#{self}::Archive"
+          end
+          
+          unless options[:table]
+            options[:table] = "archived_#{self.table_name}"
+          end
+          
+          klass = eval(options[:class]) rescue nil
+          
+          if klass
+            klass.send :set_table_name, options[:table]
+          else
+            eval <<-EVAL
+              class ::#{options[:class]} < ActiveRecord::Base
+                set_table_name "#{options[:table]}"
               end
             EVAL
-            args << self::Archive
+            klass = eval("::#{options[:class]}")
+          end
+          
+          klass.record_timestamps = options[:timestamps].inspect
+          klass.acts_as_archive(:class => self, :archive => true)
+        
+          self.reflect_on_all_associations.each do |association|
+            if !ActsAsArchive.find(association.klass).empty? && association.options[:dependent]
+              opts = association.options.dup
+              opts[:class_name] = "::#{association.class_name}::Archive"
+              opts[:foreign_key] = association.primary_key_name
+              klass.send association.macro, association.name, opts
+            end
           end
         
-          args.each do |klass|
-            klass.class_eval <<-EVAL
-              record_timestamps = #{options[:timestamps].inspect}
-              acts_as_archive(#{self}, :archive => true)
-            EVAL
-            self.reflect_on_all_associations.each do |association|
-              if !ActsAsArchive.find(association.klass).empty? && association.options[:dependent]
-                opts = association.options.dup
-                opts[:class_name] = "::#{association.class_name}::Archive"
-                opts[:foreign_key] = association.primary_key_name
-                klass.send association.macro, association.name, opts
-              end
-            end
-            unless options[:migrate] == false
-              self.also_migrate klass.table_name, options
-            end
+          unless options[:migrate] == false
+            AlsoMigrate.configuration ||= []
+            AlsoMigrate.configuration << options.merge(
+              :source => self.table_name,
+              :destination => klass.table_name
+            )
           end
         end
         
-        config[:to] = args
+        config[:to] = klass
         config[:options] = options
       end
       
@@ -193,3 +224,6 @@ end
 
 ::ActiveRecord::Base.send(:include, ::ActsAsArchive::Base)
 ::ActiveRecord::ConnectionAdapters::DatabaseStatements.send(:include, ::ActsAsArchive::DatabaseStatements)
+
+require "acts_as_archive/adapters/rails#{Rails.version[0..0]}" if defined?(Rails)
+require "acts_as_archive/adapters/sinatra" if defined?(Sinatra)

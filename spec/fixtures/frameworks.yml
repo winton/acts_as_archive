@@ -1,5 +1,7 @@
 rails:
   <3:
+    config: &c
+      - config/acts_as_archive.yml
     frameworks/rails2:
       - app/controllers/application_controller.rb
       - config/database.yml
@@ -17,6 +19,7 @@ rails:
       - app/models/has_one_through_through.rb
       - app/models/record.rb
   <4:
+    config: *c
     frameworks/rails3:
       - app/controllers/application_controller.rb
       - config/database.yml
@@ -26,11 +29,13 @@ rails:
     models: *m
 sinatra:
   <1:
+    config: *c
     frameworks/sinatra: &s
       - application.rb
     helpers: *h
     models: *m
   <2:
+    config: *c
     frameworks/sinatra: *s
     helpers: *h
     models: *m

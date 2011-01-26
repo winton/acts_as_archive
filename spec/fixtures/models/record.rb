@@ -11,6 +11,4 @@ class Record < ActiveRecord::Base
   
   has_one :has_one_through_through, :dependent => :destroy
   has_one :has_one_through, :dependent => :destroy, :through => :has_one_through_through
-  
-  acts_as_archive
 end

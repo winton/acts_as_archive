@@ -5,6 +5,8 @@ gem 'mysql2'
 gem 'rails', '3.0.3'
 gem 'rspec'
 
+gem 'also_migrate', :path => "../../../../vendor/also_migrate"
+gem 'mover', :path => "../../../../vendor/mover"
 gem 'acts_as_archive', :path => "../../../../"
 
 # Bundle edge Rails instead:
