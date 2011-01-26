@@ -41,15 +41,15 @@ end
 config/acts\_as\_archive.yml
 ----------------------------
 
+Create <code>config/acts\_as\_archive.yml</code> to define the archive class and archive table for each of your models:
+
 <pre>
 Article:
   - class: Article::Archive
     table: archived_articles
 </pre>
 
-Specify the name of your model, the name of the archive class, and the name of the archive table.
-
-If the archive model is created automatically if it does not exist.
+It is expected that neither the archive class or archive table exist yet. <code>ActsAsArchive</code> will create these automatically.
 
 Migrate
 -------
@@ -78,7 +78,7 @@ No action is necessary on your part.
 Query the archive
 -----------------
 
-Use the Archive model you specified in the configuration:
+Use the archive class you specified in the configuration:
 
 <pre>
 Article::Archive.first
