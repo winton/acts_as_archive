@@ -1,1 +1,1 @@
-ActsAsArchive.load_from_yaml(Rails.root)
+# ActsAsArchive.load_from_yaml(Rails.root)
