@@ -3,70 +3,74 @@ ActsAsArchive
 
 Don't delete your records, move them to a different table.
 
-Like <code>acts\_as\_paranoid</code>, but doesn't mess with your SQL queries.
+Like `acts_as_paranoid`, but doesn't mess with your SQL queries.
 
 Install
 -------
 
-<pre>
-gem install acts_as_archive
-</pre>
+    gem install acts_as_archive
 
 ### Rails 2
 
 #### config/environment.rb
 
-<pre>
-config.gem 'acts_as_archive'
-</pre>
+    config.gem 'acts_as_archive'
+
+#### config/initializers/load_acts_as_archive.rb
+
+    ActsAsArchive.load_from_yaml(Rails.root)
 
 ### Rails 3
 
 #### Gemfile
 
-<pre>
-gem 'acts_as_archive'
-</pre>
+    gem 'acts_as_archive'
 
 ### Sinatra
 
-<pre>
-require 'acts_as_archive'
+    require 'acts_as_archive'
+    
+    class Application < Sinatra::Base
+      include ActsAsArchive::Adapters::Sinatra
+    end
 
-class Application &lt; Sinatra::Base
-  include ActsAsArchive::Adapters::Sinatra
-end
-</pre>
-
-config/acts\_as\_archive.yml
+config/acts_as_archive.yml
 ----------------------------
 
-Create <code>config/acts\_as\_archive.yml</code> to define the archive class and archive table for each of your models:
+Create `config/acts_as_archive.yml` to define the archive class and archive table for each of your models:
 
-<pre>
-Article:
-  - class: Article::Archive
-    table: archived_articles
-</pre>
-
-It is expected that neither the archive class or archive table exist yet. <code>ActsAsArchive</code> will create these automatically.
+    Article:
+      - class: Article::Archive
+        table: archived_articles
+    
+It is expected that neither the archive class or archive table exist yet. `ActsAsArchive` will create these automatically.
 
 Migrate
 -------
 
-Run <code>rake db:migrate</code>. Your archive table is created automatically.
+    class CreateArchiveTables < ActiveRecord::Migration
+      def self.up
+        ActsAsArchive.load_from_yaml(Rails.root)
+        ActsAsArchive.migrate
+      end
+    
+      def self.down
+      end
+    end
+
+Run `rake db:migrate`. 
 
 That's it!
 ----------
 
-Use <code>destroy</code>, <code>destroy\_all</code>, <code>delete</code>, and <code>delete_all</code> like you normally would.
+Use `destroy`, `destroy_all`, `delete`, and `delete_all` like you normally would.
 
 Records move into the archive table instead of being destroyed.
 
 Automatically archive relationships
 -----------------------------------
 
-If your model's relationship has the <code>:dependent</code> option, and the relationship also uses <code>acts\_as\_archive</code>, that relationship will archive automatically.
+If your model's relationship has the `:dependent` option, and the relationship also uses `acts_as_archive`, that relationship will archive automatically.
 
 What if my schema changes?
 --------------------------
@@ -80,49 +84,41 @@ Query the archive
 
 Use the archive class you specified in the configuration:
 
-<pre>
-Article::Archive.first
-</pre>
+    Article::Archive.first
 
 Delete records without archiving
 --------------------------------
 
 Use any of the destroy methods, but add a bang (!):
 
-<pre>
-Article::Archive.first.destroy!
-Article.delete_all!([ "id in (?)", [ 1, 2, 3 ] ])
-</pre>
+    Article::Archive.first.destroy!
+    Article.delete_all!([ "id in (?)", [ 1, 2, 3 ] ])
 
 Restore from the archive
 ------------------------
 
 Use any of the destroy/delete methods on the archived record to move it back to its original table:
 
-<pre>
-Article::Archive.first.destroy
-Article::Archive.delete_all([ "id in (?)", [ 1, 2, 3 ] ])
-</pre>
+    Article::Archive.first.destroy
+    Article::Archive.delete_all([ "id in (?)", [ 1, 2, 3 ] ])
 
 Any relationships that were automatically archived will be restored as well.
 
 Magic columns
 -------------
 
-You will find an extra <code>deleted_at</code> datetime column on the archive table.
+You will find an extra `deleted_at` datetime column on the archive table.
 
-You may manually add a <code>restored_at</code> datetime column to the origin table if you wish to store restoration time as well.
+You may manually add a `restored_at` datetime column to the origin table if you wish to store restoration time as well.
 
-Migrate from acts\_as\_paranoid
+Migrate from `acts_as_paranoid`
 -------------------------------
 
-Add this line to a migration, or run it via <code>script/console</code>:
+Add this line to a migration, or run it via `script/console`:
 
-<pre>
-Article.migrate_from_acts_as_paranoid
-</pre>
+    Article.migrate_from_acts_as_paranoid
 
-This copies all records with non-null <code>deleted_at</code> values to the archive.
+This copies all records with non-null `deleted_at` values to the archive.
 
 Running specs
 -------------

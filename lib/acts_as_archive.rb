@@ -60,6 +60,10 @@ class ActsAsArchive
       end
     end
     
+    def migrate
+      AlsoMigrate::Migrator.migrate
+    end
+    
     def move(config, where, merge_options={})
       options = config[:options].dup.merge(merge_options)
       if options[:conditions]
@@ -225,5 +229,5 @@ end
 ::ActiveRecord::Base.send(:include, ::ActsAsArchive::Base)
 ::ActiveRecord::ConnectionAdapters::DatabaseStatements.send(:include, ::ActsAsArchive::DatabaseStatements)
 
-require "acts_as_archive/adapters/rails#{Rails.version[0..0]}" if defined?(Rails)
+require "acts_as_archive/adapters/rails3" if defined?(Rails) && Rails.version[0..0] == "3"
 require "acts_as_archive/adapters/sinatra" if defined?(Sinatra)
