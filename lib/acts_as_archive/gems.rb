@@ -1,17 +1,17 @@
 unless defined?(ActsAsArchive::Gems)
-  
+
   require 'yaml'
-  
+
   class ActsAsArchive
     module Gems
-      class <<self
-        
+      class << self
+
         attr_accessor :config
         attr_reader :gemset, :gemsets, :versions
-        
+
         class SimpleStruct
           attr_reader :hash
-          
+
           def initialize(hash)
             @hash = hash
             @hash.each do |key, value|
@@ -20,22 +20,22 @@ unless defined?(ActsAsArchive::Gems)
             end
           end
         end
-        
+
         Gems.config = SimpleStruct.new(
           :gemsets => [ "#{File.expand_path('../../../', __FILE__)}/config/gemsets.yml" ],
           :gemspec => "#{File.expand_path('../../../', __FILE__)}/config/gemspec.yml",
           :warn => true
         )
-        
+
         def activate(*gems)
           begin
             require 'rubygems' unless defined?(::Gem)
           rescue LoadError
             puts "rubygems library could not be required" if @config.warn
           end
-          
+
           self.gemset ||= gemset_from_loaded_specs
-          
+
           gems.flatten.collect(&:to_sym).each do |name|
             version = @versions[name]
             vendor = File.expand_path("../../../vendor/#{name}/lib", __FILE__)
@@ -48,19 +48,19 @@ unless defined?(ActsAsArchive::Gems)
             end
           end
         end
-        
+
         def dependencies
           dependency_filter(@gemspec.dependencies, @gemset)
         end
-        
+
         def development_dependencies
           dependency_filter(@gemspec.development_dependencies, @gemset)
         end
-        
+
         def gemset=(gemset)
           if gemset
             @gemset = gemset.to_sym
-        
+
             @gemsets = @config.gemsets.reverse.collect { |config|
               if config.is_a?(::String)
                 YAML::load(File.read(config)) rescue {}
@@ -70,7 +70,7 @@ unless defined?(ActsAsArchive::Gems)
             }.inject({}) do |hash, config|
               deep_merge(hash, symbolize_keys(config))
             end
-            
+
             @versions = (@gemsets[gemspec.name.to_sym] || {}).inject({}) do |hash, (key, value)|
               if !value.is_a?(::Hash) && value
                 hash[key] = value
@@ -85,7 +85,7 @@ unless defined?(ActsAsArchive::Gems)
             @versions = nil
           end
         end
-        
+
         def gemset_names
           (
             [ :default ] +
@@ -95,7 +95,7 @@ unless defined?(ActsAsArchive::Gems)
             }
           ).uniq
         end
-        
+
         def gemspec(reload=false)
           if @gemspec && !reload
             @gemspec
@@ -104,16 +104,16 @@ unless defined?(ActsAsArchive::Gems)
             @gemspec = SimpleStruct.new(data)
           end
         end
-      
+
         private
-      
+
         def deep_merge(first, second)
           merger = lambda do |key, v1, v2|
             Hash === v1 && Hash === v2 ? v1.merge(v2, &merger) : v2
           end
           first.merge(second, &merger)
         end
-        
+
         def dependency_filter(dependencies, match)
           (dependencies || []).inject([]) { |array, value|
             if value.is_a?(::Hash)
@@ -124,7 +124,7 @@ unless defined?(ActsAsArchive::Gems)
             array
           }.uniq.collect(&:to_sym)
         end
-        
+
         def gemset_from_loaded_specs
           if defined?(Gem)
             Gem.loaded_specs.each do |name, spec|
@@ -139,7 +139,7 @@ unless defined?(ActsAsArchive::Gems)
             :none
           end
         end
-      
+
         def symbolize_keys(hash)
           return {} unless hash.is_a?(::Hash)
           hash.inject({}) do |options, (key, value)|
