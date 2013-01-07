@@ -1,6 +1,8 @@
 ActsAsArchive
 =============
 
+**This project is no longer maintained. If you would like to become the new owner, please email [Winton Welsh](mailto:mail@wintoni.us).**
+
 Don't delete your records, move them to a different table.
 
 Like <code>acts\_as\_paranoid</code>, but doesn't mess with your SQL queries.
