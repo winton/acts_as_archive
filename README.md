@@ -53,10 +53,18 @@ Article:
 
 It is expected that neither the archive class or archive table exist yet. <code>ActsAsArchive</code> will create these automatically.
 
+Override ActiveRecord
+----------------
+<pre>
+class Article &lt; ActiveRecord::Base
+  acts_as_archive
+end
+</pre>
+
 Migrate
 -------
 
-Run <code>rake db:migrate</code>. Your archive table is created automatically.
+Run <code>rake db:migrate</code>. Your archive table is created automatically. (There will be no output -- this is normal)
 
 That's it!
 ----------
